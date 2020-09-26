@@ -20,8 +20,10 @@ public abstract class AbstractCharacter implements ICharacter {
   protected final BlockingQueue<ICharacter> turnsQueue;
   protected final String name;
   private final CharacterClass characterClass;
-  private Weapon equippedWeapon = null;
-  private ScheduledExecutorService scheduledExecutor;
+  protected Weapon equippedWeapon = null; //Todo
+  protected ScheduledExecutorService scheduledExecutor; //Todo
+  protected int lifePoints; //Todo
+  protected int defense; //Todo
 
   protected AbstractCharacter(@NotNull BlockingQueue<ICharacter> turnsQueue,
       @NotNull String name, CharacterClass characterClass) {
@@ -31,22 +33,12 @@ public abstract class AbstractCharacter implements ICharacter {
   }
 
   @Override
-  public void waitTurn() {
-    scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-    if (this instanceof PlayerCharacter) {
-      scheduledExecutor
-          .schedule(this::addToQueue, equippedWeapon.getWeight() / 10, TimeUnit.SECONDS);
-    } else {
-      var enemy = (Enemy) this;
-      scheduledExecutor
-          .schedule(this::addToQueue, enemy.getWeight() / 10, TimeUnit.SECONDS);
-    }
-  }
+  public abstract void waitTurn(); //Todo
 
   /**
    * Adds this character to the turns queue.
    */
-  private void addToQueue() {
+  protected void addToQueue() { //Todo
     turnsQueue.add(this);
     scheduledExecutor.shutdown();
   }
