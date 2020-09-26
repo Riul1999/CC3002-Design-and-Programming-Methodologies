@@ -3,6 +3,9 @@ package com.github.cc3002.finalreality.model.character;
 import com.github.cc3002.finalreality.model.character.player.CharacterClass;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,6 +31,14 @@ public class Enemy extends AbstractCharacter {
   /**
    * Returns the weight of this enemy.
    */
+
+  @Override
+  public void waitTurn() { //Todo
+    scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    scheduledExecutor
+            .schedule(this::addToQueue, this.getWeight() / 10, TimeUnit.SECONDS);
+  }
+
   public int getWeight() {
     return weight;
   }
@@ -48,4 +59,5 @@ public class Enemy extends AbstractCharacter {
   public int hashCode() {
     return Objects.hash(getWeight());
   }
+
 }
