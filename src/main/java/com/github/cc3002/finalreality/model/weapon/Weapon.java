@@ -1,12 +1,17 @@
 package com.github.cc3002.finalreality.model.weapon;
 
+/**
+ * A class that holds all the information of a sword.
+ *
+ * @author Rodrigo Urrea Loyola
+ */
 import java.util.Objects;
 
 /**
  * A class that holds all the information of a weapon.
  *
  * @author Ignacio Slater Muñoz.
- * @author <Your name>
+ * @author Rodrigo Urrea Loyola
  */
 public class Weapon {
 
@@ -16,7 +21,7 @@ public class Weapon {
   private final WeaponType type;
 
   /**
-   * Creates a weapon with a name, a base damage, speed and it's type.
+   * Creates a weapon with a name, a base damage, weight and it's type.
    *
    * @see WeaponType
    */
