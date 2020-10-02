@@ -3,13 +3,16 @@ package com.github.cc3002.finalreality.model.character;
 import com.github.cc3002.finalreality.model.character.player.CharacterClass;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
  * A class that holds all the information of a single enemy of the game.
  *
  * @author Ignacio Slater Muñoz
- * @author <Your name>
+ * @author Rodrigo Urrea Loyola
  */
 public class Enemy extends AbstractCharacter {
 
@@ -25,6 +28,12 @@ public class Enemy extends AbstractCharacter {
     this.weight = weight;
   }
 
+  @Override
+  public void waitTurn() {
+    scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    scheduledExecutor
+            .schedule(this::addToQueue, this.getWeight() / 10, TimeUnit.SECONDS);
+  }
   /**
    * Returns the weight of this enemy.
    */

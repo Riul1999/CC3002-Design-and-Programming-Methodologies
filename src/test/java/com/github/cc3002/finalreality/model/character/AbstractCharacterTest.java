@@ -31,7 +31,7 @@ public abstract class AbstractCharacterTest {
   @Test
   void waitTurnTest() {
     Assertions.assertTrue(turns.isEmpty());
-    tryToEquip(testCharacters.get(0));
+    //tryToEquip(testCharacters.get(0));
     testCharacters.get(0).waitTurn();
     try {
       // Thread.sleep is not accurate so this values may be changed to adjust the
@@ -47,9 +47,9 @@ public abstract class AbstractCharacterTest {
     }
   }
 
-  private void tryToEquip(ICharacter character) {
-    character.equip(testWeapon);
-  }
+  //private void tryToEquip(ICharacter character) {
+  //  character.equip(testWeapon);
+  //}
 
   protected void checkConstruction(final ICharacter expectedCharacter,
       final ICharacter testEqualCharacter,
