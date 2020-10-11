@@ -34,6 +34,7 @@ public class Enemy extends AbstractCharacter {
     scheduledExecutor
             .schedule(this::addToQueue, this.getWeight() / 10, TimeUnit.SECONDS);
   }
+
   /**
    * Returns the weight of this enemy.
    */
@@ -50,11 +51,12 @@ public class Enemy extends AbstractCharacter {
       return false;
     }
     final Enemy enemy = (Enemy) o;
-    return getWeight() == enemy.getWeight();
+    return getWeight() == enemy.getWeight() &&
+            getName() == enemy.getName();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getWeight());
+    return Objects.hash(getName(),getWeight());
   }
 }
