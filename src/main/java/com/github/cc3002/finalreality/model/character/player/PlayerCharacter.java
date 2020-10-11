@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import com.github.cc3002.finalreality.model.weapon.Weapon;
+import com.github.cc3002.finalreality.model.weapon.WeaponType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,7 +29,12 @@ public class PlayerCharacter extends AbstractCharacter {
    *     the queue with the characters waiting for their turn
    * @param characterClass
    *     the class of this character
+   * @param equippedWeapon
+   *     the equipped Weapon of this character
    */
+
+  protected Weapon equippedWeapon = new Weapon("NULL",-1,-1, WeaponType.NULLWEAPON);
+
   public PlayerCharacter(@NotNull String name,
       @NotNull BlockingQueue<ICharacter> turnsQueue,
       final CharacterClass characterClass) {
@@ -61,7 +67,7 @@ public class PlayerCharacter extends AbstractCharacter {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getCharacterClass());
+    return Objects.hash(getName(),getCharacterClass());
   }
 
   @Override
@@ -76,4 +82,5 @@ public class PlayerCharacter extends AbstractCharacter {
     return getCharacterClass() == that.getCharacterClass()
         && getName().equals(that.getName());
   }
+
 }

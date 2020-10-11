@@ -52,3 +52,29 @@ En ambos casos solo se construiran las clases y sus respectivos constructores, t
 se implementaran en la proxima etapa.
 
 Con esto se concluye la revision de jerarquia de clases del paquete model.
+
+---
+Se modifican los test existentes y se agregan nuevos para testear nuevas funcionalidades.
+
+Primero se revisa la clase AbstractCharacterTest, se decide eliminar dicha clase y traspasar sus metodos a sus
+subclases, esto debido a problemas al momento de equipar el arma a los personajes (parte importante de los test)
+donde al englobar a los PlayerCharacters con los Enemys se produce un error al llamar al metodo equip, pues no 
+esta definido en AbstractCharacter (y no debe de estarlo).
+
+Al hacer esto se observo que el test equipWeaponTest presentaba errores, pues no es posible retornar null con el
+metodo getEquippedWeapon(), por lo que en vez de inicializar equippedWeapon con null, se hizo con un arma nula,
+cuyo WeaponType es NULL. Luego de arreglarlo se probaron los test de PlayerCharacterTest y pasaron todos.
+
+Luego se probaron los test de EnemyTest y pasaron todos. 
+
+Tambien se reviso WeaponTest y tambien se pasaron todos los test. Luego se modificaron los test para incluir las 
+nuevas clases que se crearon en la entrega anterior, se volvio a correr los test y pasaron todos. Tambien se 
+agregaron nuevas armas con distintos nombres, pesos tipos y daño para testear todas las branches del metodo equals().
+
+Se modifico la clase EnemyTest, para lograr que se testearan todas las funcionalidades, para esto se agregaron 
+nuevos enemigos como el "Goblin Champion", ademas de otro "Goblin" pero con distinto peso.
+
+Se modifico la clase PlayerCharacterTest, para incluir las nuevas clases de personajes, para esto se modifico el 
+metodo setUp(), para que se inicializaran los personajes como objetos de la clase correspondiente.
+
+Con esto se deja totalmente testeado el codigo del paquete model (100% de las linea y branches)

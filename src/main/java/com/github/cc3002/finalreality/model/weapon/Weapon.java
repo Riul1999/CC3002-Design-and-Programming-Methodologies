@@ -1,10 +1,5 @@
 package com.github.cc3002.finalreality.model.weapon;
 
-/**
- * A class that holds all the information of a sword.
- *
- * @author Rodrigo Urrea Loyola
- */
 import java.util.Objects;
 
 /**
@@ -33,19 +28,35 @@ public class Weapon {
     this.type = type;
   }
 
-  private String getName() {
+  /**
+   *
+   * @return the name of the weapon
+   */
+  public String getName() {
     return name;
   }
 
-  private int getDamage() {
+  /**
+   *
+   * @return the damage of the weapon
+   */
+  public int getDamage() {
     return damage;
   }
 
+  /**
+   *
+   * @return the weight of the weapon
+   */
   public int getWeight() {
     return weight;
   }
 
-  private WeaponType getType() {
+  /**
+   *
+   * @return the type of the weapon
+   */
+  public WeaponType getType() {
     return type;
   }
 
