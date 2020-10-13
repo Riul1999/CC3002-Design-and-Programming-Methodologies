@@ -30,6 +30,8 @@ class PlayerCharacterTest{
   private static final String WHITE_MAGE_NAME = "Eiko";
   private static final String ENGINEER_NAME = "Cid";
   private static final String THIEF_NAME = "Zidane";
+  private static int LIFE = 1000;
+  private static int DEFENSE = 30;
 
   protected BlockingQueue<ICharacter> turns;
   protected List<PlayerCharacter> testCharacters;
@@ -46,11 +48,11 @@ class PlayerCharacterTest{
     testWeapon = new Weapon("Test", 15, 10, WeaponType.AXE);
     testCharacters = new ArrayList<>();
 
-    testCharacters.add(new BlackMage(BLACK_MAGE_NAME,turns));
-    testCharacters.add(new WhiteMage(WHITE_MAGE_NAME,turns));
-    testCharacters.add(new Engineer(ENGINEER_NAME,turns));
-    testCharacters.add(new Knight(KNIGHT_NAME,turns));
-    testCharacters.add(new Thief(THIEF_NAME,turns));
+    testCharacters.add(new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE));
+    testCharacters.add(new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE));
+    testCharacters.add(new Engineer(ENGINEER_NAME,turns,LIFE,DEFENSE));
+    testCharacters.add(new Knight(KNIGHT_NAME,turns,LIFE,DEFENSE));
+    testCharacters.add(new Thief(THIEF_NAME,turns,LIFE,DEFENSE));
   }
 
   /**
@@ -77,23 +79,31 @@ class PlayerCharacterTest{
 
   /**
    * Checks that the equals method works properly.
-   * @param expectedCharacter PlayerCharacter
-   * @param testEqualCharacter PlayerCharacter
-   * @param sameClassDifferentName PlayerCharacter
-   * @param differentClassCharacter PlayerCharacter
-   * @param enemy Enemy
+   * @param expectedCharacter Same PlayerCharacter
+   * @param testEqualCharacter Test PlayerCharacter
+   * @param sameClassDifferentName Different name PlayerCharacter
+   * @param differentClassCharacter Different class PlayerCharacter
+   * @param differentLifePoints Different life points PlayerCharacter
+   * @param differentDefense  Different defense PlayerCharacter
+   * @param enemy Enemy different object Enemy
    */
   protected void checkConstruction(final ICharacter expectedCharacter,
                                    final ICharacter testEqualCharacter,
                                    final ICharacter sameClassDifferentName,
                                    final ICharacter differentClassCharacter,
+                                   final ICharacter differentLifePoints,
+                                   final ICharacter differentDefense,
                                    final ICharacter enemy) {
     assertEquals(expectedCharacter, testEqualCharacter);
     assertEquals(expectedCharacter.hashCode(),testEqualCharacter.hashCode());
-    assertNotEquals(sameClassDifferentName, testEqualCharacter);
-    assertNotEquals(sameClassDifferentName.hashCode(),testEqualCharacter.hashCode());
+    assertNotEquals(testEqualCharacter,sameClassDifferentName);
+    assertNotEquals(testEqualCharacter.hashCode(),sameClassDifferentName.hashCode());
     assertNotEquals(testEqualCharacter, differentClassCharacter);
     assertNotEquals(testEqualCharacter.hashCode(),differentClassCharacter.hashCode());
+    assertNotEquals(testEqualCharacter, differentLifePoints);
+    assertNotEquals(testEqualCharacter.hashCode(),differentLifePoints.hashCode());
+    assertNotEquals(testEqualCharacter, differentDefense);
+    assertNotEquals(testEqualCharacter.hashCode(),differentDefense.hashCode());
     assertNotEquals(testEqualCharacter, enemy);
     assertNotEquals(testEqualCharacter.hashCode(),enemy.hashCode());
   }
@@ -103,17 +113,19 @@ class PlayerCharacterTest{
    */
   @Test
   void constructorTest() {
-    var enemy = new Enemy("Enemy", 10, turns);
+    var enemy = new Enemy("Enemy", 10, turns, LIFE, DEFENSE, 10);
     for (var character :
         testCharacters) {
       var characterClass = character.getCharacterClass();
       var characterName = character.getName();
-      checkConstruction(new PlayerCharacter(characterName, turns, characterClass),
-          character,
-          new PlayerCharacter("Test", turns, characterClass),
-          new PlayerCharacter(characterName, turns,
-              characterClass == CharacterClass.THIEF ? CharacterClass.BLACK_MAGE
-                  : CharacterClass.THIEF),enemy);
+      checkConstruction(new PlayerCharacter(characterName, turns, characterClass, LIFE, DEFENSE),
+              character,
+              new PlayerCharacter("Test", turns, characterClass, LIFE, DEFENSE),
+              new PlayerCharacter(characterName, turns,
+                characterClass == CharacterClass.THIEF ? CharacterClass.BLACK_MAGE : CharacterClass.THIEF,LIFE,DEFENSE),
+              new PlayerCharacter(characterName, turns, characterClass, LIFE+1, DEFENSE),
+              new PlayerCharacter(characterName,turns,characterClass,LIFE,DEFENSE+1),
+              enemy);
     }
 
   }

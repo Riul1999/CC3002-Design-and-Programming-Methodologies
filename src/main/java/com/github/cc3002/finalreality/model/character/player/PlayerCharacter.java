@@ -20,25 +20,30 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerCharacter extends AbstractCharacter {
 
+  protected Weapon equippedWeapon = new Weapon("NULL",-1,-1, WeaponType.NULLWEAPON);
+
   /**
    * Creates a new character.
    *
    * @param name
-   *     the character's name
+   *     the player character's name
    * @param turnsQueue
    *     the queue with the characters waiting for their turn
    * @param characterClass
    *     the class of this character
-   * @param equippedWeapon
-   *     the equipped Weapon of this character
+   * @param lifePoints
+   *     the player character's life points
+   * @param defense
+   *     the player character's defense
+   *
    */
 
-  protected Weapon equippedWeapon = new Weapon("NULL",-1,-1, WeaponType.NULLWEAPON);
-
   public PlayerCharacter(@NotNull String name,
-      @NotNull BlockingQueue<ICharacter> turnsQueue,
-      final CharacterClass characterClass) {
-    super(turnsQueue, name, characterClass);
+                         @NotNull BlockingQueue<ICharacter> turnsQueue,
+                         final CharacterClass characterClass,
+                         @NotNull Integer lifePoints,
+                         Integer defense) {
+    super(turnsQueue, name, characterClass, lifePoints, defense);
   }
 
   @Override
@@ -67,7 +72,8 @@ public class PlayerCharacter extends AbstractCharacter {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(),getCharacterClass());
+    return Objects.hash(getName(),getCharacterClass(),
+                        getLifePoints(),getDefense());
   }
 
   @Override
@@ -79,8 +85,10 @@ public class PlayerCharacter extends AbstractCharacter {
       return false;
     }
     final PlayerCharacter that = (PlayerCharacter) o;
-    return getCharacterClass() == that.getCharacterClass()
-        && getName().equals(that.getName());
+    return     getCharacterClass() == that.getCharacterClass()
+            && getName().equals(that.getName())
+            && getLifePoints().equals((that.getLifePoints()))
+            && getDefense().equals(that.getDefense());
   }
 
 }

@@ -27,4 +27,14 @@ public interface ICharacter {
    * Returns this character's class.
    */
   CharacterClass getCharacterClass();
+
+  /**
+   * Returns this character's life points
+   */
+  Integer getLifePoints();
+
+  /**
+   * Returns this character's defense
+   */
+  Integer getDefense();
 }

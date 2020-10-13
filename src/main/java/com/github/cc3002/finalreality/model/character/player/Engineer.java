@@ -19,10 +19,16 @@ public class Engineer extends AbstractCommonCharacter{
      *      the engineer's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
+     * @param lifePoints
+     *      the engineer's life points
+     * @param defense
+     *      the engineer's defense
      *
      */
     public Engineer(@NotNull String name,
-                  @NotNull BlockingQueue<ICharacter> turnsQueue) {
-        super(name, turnsQueue, CharacterClass.ENGINEER);
+                    @NotNull BlockingQueue<ICharacter> turnsQueue,
+                    @NotNull Integer lifePoints,
+                    Integer defense) {
+        super(name, turnsQueue, CharacterClass.ENGINEER, lifePoints, defense);
     }
 }

@@ -19,10 +19,16 @@ public class WhiteMage extends AbstractMagicCharacter{
      *      the white mage's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
+     * @param lifePoints
+     *       the white mage's life points
+     * @param defense
+     *       the white mage's defense
      *
      */
     public WhiteMage(@NotNull String name,
-                  @NotNull BlockingQueue<ICharacter> turnsQueue) {
-        super(name, turnsQueue, CharacterClass.WHITE_MAGE);
+                     @NotNull BlockingQueue<ICharacter> turnsQueue,
+                     @NotNull Integer lifePoints,
+                     Integer defense) {
+        super(name, turnsQueue, CharacterClass.WHITE_MAGE, lifePoints, defense);
     }
 }

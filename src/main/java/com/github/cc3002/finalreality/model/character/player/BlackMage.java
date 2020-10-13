@@ -19,10 +19,15 @@ public class BlackMage extends AbstractMagicCharacter{
      *      the black mage's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
-     *
+     * @param lifePoints
+     *      the black mage's life points
+     * @param defense
+     *      the black mage's defense
      */
     public BlackMage(@NotNull String name,
-                  @NotNull BlockingQueue<ICharacter> turnsQueue) {
-        super(name, turnsQueue, CharacterClass.BLACK_MAGE);
+                     @NotNull BlockingQueue<ICharacter> turnsQueue,
+                     @NotNull Integer lifePoints,
+                     Integer defense) {
+        super(name, turnsQueue, CharacterClass.BLACK_MAGE,lifePoints,defense);
     }
 }

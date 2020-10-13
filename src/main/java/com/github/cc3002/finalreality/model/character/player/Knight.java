@@ -19,10 +19,16 @@ public class Knight extends AbstractCommonCharacter{
      *      the knight's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
+     * @param lifePoints
+     *      the knight's life points
+     * @param defense
+     *      the knight's defense
      *
      */
     public Knight(@NotNull String name,
-                  @NotNull BlockingQueue<ICharacter> turnsQueue) {
-        super(name, turnsQueue, CharacterClass.KNIGHT);
+                  @NotNull BlockingQueue<ICharacter> turnsQueue,
+                  @NotNull Integer lifePoints,
+                  Integer defense) {
+        super(name, turnsQueue, CharacterClass.KNIGHT, lifePoints, defense);
     }
 }

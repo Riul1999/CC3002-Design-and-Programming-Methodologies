@@ -19,10 +19,16 @@ public class Thief extends AbstractCommonCharacter{
      *      the thief's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
+     * @param lifePoints
+     *      the thief's life points
+     * @param defense
+     *      the thief's defense
      *
      */
     public Thief(@NotNull String name,
-                  @NotNull BlockingQueue<ICharacter> turnsQueue) {
-        super(name, turnsQueue, CharacterClass.THIEF);
+                  @NotNull BlockingQueue<ICharacter> turnsQueue,
+                 @NotNull Integer lifePoints,
+                 Integer defense) {
+        super(name, turnsQueue, CharacterClass.THIEF, lifePoints, defense);
     }
 }
