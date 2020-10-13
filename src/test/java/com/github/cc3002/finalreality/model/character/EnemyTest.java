@@ -102,7 +102,7 @@ class EnemyTest {
       checkConstruction(new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE),
               testCharacters,
               new Enemy(ENEMY_NAME, WEIGHT+1, turns, LIFE, DEFENSE, DAMAGE),
-              new Enemy(ENEMY_NAME, WEIGHT+1, turns, LIFE, DEFENSE, DAMAGE+1),
+              new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE+1),
               new Enemy("test goblin", WEIGHT, turns, LIFE, DEFENSE, DAMAGE),
               new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE+1, DEFENSE, DAMAGE),
               new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE+1, DAMAGE),

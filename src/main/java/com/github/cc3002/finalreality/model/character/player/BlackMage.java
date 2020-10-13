@@ -1,6 +1,7 @@
 package com.github.cc3002.finalreality.model.character.player;
 
 import com.github.cc3002.finalreality.model.character.ICharacter;
+import com.github.cc3002.finalreality.model.weapon.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.BlockingQueue;
@@ -29,5 +30,10 @@ public class BlackMage extends AbstractMagicCharacter{
                      @NotNull Integer lifePoints,
                      Integer defense) {
         super(name, turnsQueue, CharacterClass.BLACK_MAGE,lifePoints,defense);
+    }
+
+    @Override
+    public void equip(Weapon weapon) {
+        weapon.equipToBlackMage(this);
     }
 }

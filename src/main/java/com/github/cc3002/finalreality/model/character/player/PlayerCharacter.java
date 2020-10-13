@@ -4,12 +4,10 @@ import com.github.cc3002.finalreality.model.character.AbstractCharacter;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.github.cc3002.finalreality.model.weapon.Weapon;
-import com.github.cc3002.finalreality.model.weapon.WeaponType;
+import com.github.cc3002.finalreality.model.weapon.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -54,14 +52,38 @@ public class PlayerCharacter extends AbstractCharacter {
   }
 
   /**
-   * Equip a weapon to the character.
+   * Equip a weapon to the character if the character isn't a instance of PlayerCharacter or
+   * AbstractCommonCharacter or AbstractMagicCharacter.
    *
    * @param weapon
    *      the equipped weapon
    */
-  public void equip(Weapon weapon) {
-      this.equippedWeapon = weapon;
-  }
+  public void equip(Weapon weapon) {}
+
+  /**
+   * Equip an Axe to the character
+   */
+  public void equipAxe(Axe axe) {this.equippedWeapon = axe;}
+
+  /**
+   * Equip a Bow to the character
+   */
+  public void equipBow(Bow bow) {this.equippedWeapon = bow;}
+
+  /**
+   * Equip a Staff to the character
+   */
+  public void equipStaff(Staff staff) {this.equippedWeapon = staff;}
+
+  /**
+   * Equip a Sword to the character
+   */
+  public void equipSword(Sword sword) {this.equippedWeapon = sword;}
+
+  /**
+   * Equip a Knife to the character
+   */
+  public void equipKnife(Knife knife) {this.equippedWeapon = knife;}
 
   /**
    * Returns this character's equipped weapon.

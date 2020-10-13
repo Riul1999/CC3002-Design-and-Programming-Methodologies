@@ -1,5 +1,7 @@
 package com.github.cc3002.finalreality.model.weapon;
 
+import com.github.cc3002.finalreality.model.character.player.*;
+
 /**
  * A class that holds all the information of a sword.
  *
@@ -22,4 +24,15 @@ public class Sword extends Weapon{
     public Sword(final String name, final int damage, final int weight) {
         super(name,damage,weight,WeaponType.SWORD);
     }
+
+    @Override
+    public void equipToKnight(Knight character){
+        character.equipSword(this);
+    }
+
+    @Override
+    public void equipToThief(Thief character){
+        character.equipSword(this);
+    }
+
 }

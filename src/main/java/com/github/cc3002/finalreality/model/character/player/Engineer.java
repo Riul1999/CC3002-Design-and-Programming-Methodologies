@@ -1,6 +1,7 @@
 package com.github.cc3002.finalreality.model.character.player;
 
 import com.github.cc3002.finalreality.model.character.ICharacter;
+import com.github.cc3002.finalreality.model.weapon.Weapon;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.BlockingQueue;
@@ -30,5 +31,10 @@ public class Engineer extends AbstractCommonCharacter{
                     @NotNull Integer lifePoints,
                     Integer defense) {
         super(name, turnsQueue, CharacterClass.ENGINEER, lifePoints, defense);
+    }
+
+    @Override
+    public void equip(Weapon weapon) {
+        weapon.equipToEngineer(this);
     }
 }

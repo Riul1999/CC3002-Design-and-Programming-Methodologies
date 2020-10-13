@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.github.cc3002.finalreality.model.weapon.Weapon;
-import com.github.cc3002.finalreality.model.weapon.WeaponType;
+import com.github.cc3002.finalreality.model.weapon.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ class PlayerCharacterTest{
   @BeforeEach
   void setUp() {
     turns = new LinkedBlockingQueue<>();
-    testWeapon = new Weapon("Test", 15, 10, WeaponType.AXE);
+    testWeapon = new Axe("Test", 15, 10);
     testCharacters = new ArrayList<>();
 
     testCharacters.add(new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE));
@@ -61,17 +60,17 @@ class PlayerCharacterTest{
   @Test
   void waitTurnTest() {
     Assertions.assertTrue(turns.isEmpty());
-    testCharacters.get(0).equip(testWeapon);
-    testCharacters.get(0).waitTurn();
+    testCharacters.get(3).equip(testWeapon);
+    testCharacters.get(3).waitTurn();
     try {
       // Thread.sleep is not accurate so this values may be changed to adjust the
       // acceptable error margin.
       // We're testing that the character waits approximately 1 second.
-      Thread.sleep(900);
+      Thread.sleep(700);
       Assertions.assertEquals(0, turns.size());
-      Thread.sleep(200);
+      Thread.sleep(500);
       Assertions.assertEquals(1, turns.size());
-      Assertions.assertEquals(testCharacters.get(0), turns.peek());
+      Assertions.assertEquals(testCharacters.get(3), turns.peek());
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -135,11 +134,82 @@ class PlayerCharacterTest{
    */
   @Test
   void equipWeaponTest() {
-    for (var character :
-        testCharacters) {
-      assertEquals(WeaponType.NULLWEAPON,character.getEquippedWeapon().getType());
-      character.equip(testWeapon);
-      assertEquals(testWeapon, character.getEquippedWeapon());
-    }
+    PlayerCharacter blackMage = testCharacters.get(0);
+    PlayerCharacter whiteMage = testCharacters.get(1);
+    PlayerCharacter engineer = testCharacters.get(2);
+    PlayerCharacter knight = testCharacters.get(3);
+    PlayerCharacter thief = testCharacters.get(4);
+
+    Weapon axe = new Axe("War Axe", 10,15);
+    Weapon bow = new Bow("War Bow", 10,15);
+    Weapon staff = new Staff("War Staff", 10,15,15);
+    Weapon sword = new Sword("War Sword", 10,15);
+    Weapon knife = new Knife("War Knife", 10,15);
+
+    assertEquals(WeaponType.NULLWEAPON,blackMage.getEquippedWeapon().getType());
+    blackMage.equip(testWeapon);
+    assertEquals(WeaponType.NULLWEAPON,whiteMage.getEquippedWeapon().getType());
+    whiteMage.equip(testWeapon);
+    assertEquals(WeaponType.NULLWEAPON,engineer.getEquippedWeapon().getType());
+    engineer.equip(testWeapon);
+    assertEquals(WeaponType.NULLWEAPON,knight.getEquippedWeapon().getType());
+    knight.equip(testWeapon);
+    assertEquals(WeaponType.NULLWEAPON,thief.getEquippedWeapon().getType());
+    thief.equip(testWeapon);
+
+    blackMage.equip(axe);
+    assertNotEquals(blackMage.getEquippedWeapon(),axe);
+    whiteMage.equip(axe);
+    assertNotEquals(whiteMage.getEquippedWeapon(),axe);
+    engineer.equip(axe);
+    assertEquals(engineer.getEquippedWeapon(),axe);
+    knight.equip(axe);
+    assertEquals(knight.getEquippedWeapon(),axe);
+    thief.equip(axe);
+    assertNotEquals(thief.getEquippedWeapon(),axe);
+
+    blackMage.equip(bow);
+    assertNotEquals(blackMage.getEquippedWeapon(),bow);
+    whiteMage.equip(bow);
+    assertNotEquals(whiteMage.getEquippedWeapon(),bow);
+    engineer.equip(bow);
+    assertEquals(engineer.getEquippedWeapon(),bow);
+    knight.equip(bow);
+    assertNotEquals(knight.getEquippedWeapon(),bow);
+    thief.equip(bow);
+    assertEquals(thief.getEquippedWeapon(),bow);
+
+    blackMage.equip(staff);
+    assertEquals(blackMage.getEquippedWeapon(),staff);
+    whiteMage.equip(staff);
+    assertEquals(whiteMage.getEquippedWeapon(),staff);
+    engineer.equip(staff);
+    assertNotEquals(engineer.getEquippedWeapon(),staff);
+    knight.equip(staff);
+    assertNotEquals(knight.getEquippedWeapon(),staff);
+    thief.equip(staff);
+    assertEquals(thief.getEquippedWeapon(),staff);
+
+    blackMage.equip(sword);
+    assertNotEquals(blackMage.getEquippedWeapon(),sword);
+    whiteMage.equip(sword);
+    assertNotEquals(whiteMage.getEquippedWeapon(),sword);
+    engineer.equip(sword);
+    assertNotEquals(engineer.getEquippedWeapon(),sword);
+    knight.equip(sword);
+    assertEquals(knight.getEquippedWeapon(),sword);
+    thief.equip(sword);
+    assertEquals(thief.getEquippedWeapon(),sword);
+
+    blackMage.equip(knife);
+    assertEquals(blackMage.getEquippedWeapon(),knife);
+    whiteMage.equip(knife);
+    assertNotEquals(whiteMage.getEquippedWeapon(),knife);
+    engineer.equip(knife);
+    assertNotEquals(engineer.getEquippedWeapon(),knife);
+    knight.equip(knife);
+    assertEquals(knight.getEquippedWeapon(),knife);
+    thief.equip(knife);
+    assertNotEquals(thief.getEquippedWeapon(),knife);
   }
 }

@@ -3,14 +3,23 @@ ChangeLog
 
 Version 3.0
 -----------
+- (RC.2) Nuevos parametros, funcionalidades y testing correctos (asegurado 100% de las lineas y branches cubiertos)
+- (B.14) Se corren los test y pasan todos (se logra 100% de las lineas y branches)
+- (B.13) Se modifica test waitTurnTest, se cambio el tiempo de espera para que pase un turno de 900ms a 1200ms
+- (B.13) Se modifca el metodo equip() en playerCharacter para lograr lo que se pide en el enunciado (con double dispatch)
+- (B.12) Modificacion del test equipWeaponTest de la clase PlayerCharacterTest
+- (B.11) Se corren los test y pasan todos (se logra 100% de las lineas y branches)
+- (B.10) Moficacion de la clase Staff, se incluye el parametro magicDamage, y se sobreescriben los metodos equals() y hashCode()
+- (B.9) Testeo de nuevos parametros de Staff (magicDamage), se arreglan errores del testeo
+- (RC.1) Nuevos parametros y testing correctos (asegurado 100% de lineas y branches cubiertos)
 - (B.8) Se corren los test y pasan todos (se logra 100% de las lineas y branches)
 - (B.7) Modificacion clase Enmey, se agrega el parametro damage, junto con su metodo para obtenerlo
-- (B.6) Testeo de nuevo parametro (damage)
+- (B.6) Testeo de nuevo parametro de Enemy(damage)
 - (B.5) Se corren los test y se pasan todos (se logra 100% de las lineas y branches)
 - (B.4) Agregacion de los nuevos parametros al contructor de las sublases de AbstractCharacter y los metodos equals() y hashCode
 - (B.3) Modificacion clase AbstractCharacter, se agregan parametros life,defense junto con sus metodos para obtenerlos
 - (B.2) Modificacion de la clase EnemyTest, se eliminan todos los enemigos excepto 1 pues no influyen en el testing
-- (B.1) Testeo de nuevos parametros (life,defense)
+- (B.1) Testeo de nuevos parametros de AbstractCharacter y sus subclases(life,defense)
 
 Version 2.0
 -----------
