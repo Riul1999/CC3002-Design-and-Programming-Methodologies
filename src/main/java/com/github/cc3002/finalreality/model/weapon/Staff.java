@@ -23,6 +23,8 @@ public class Staff extends Weapon{
      *      the staff's damage
      * @param weight
      *      the staff's weight
+     * @param magicDamage
+     *      the staff's magic damage
      *
      */
     public Staff(final String name, final int damage, final int weight, final Integer magicDamage) {

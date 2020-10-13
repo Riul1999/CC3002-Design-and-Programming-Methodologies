@@ -3,9 +3,14 @@ ChangeLog
 
 Version 3.0
 -----------
+- (RC.3) Nuevos paramtros, metodos y testeo correctos (asegurado 100% de las luneas y branches cubiertos)
+- (B.19) Se corren los test y pasan todos (se logra 100% de lineas y branches)
+- (B.18) Se modifica la clase PlayerCharacterTest para testear la nueva funcionalidad
+- (B.17) Modificacion de la AbstractMagicCharacter y sus subclases, nuevo parametro y metodos equals() y hashCode)() sobreescritos
+- (B.16) Testeo del nuevo parametro maxMana de la clase AbstractMagicCharacter
 - (RC.2) Nuevos parametros, funcionalidades y testing correctos (asegurado 100% de las lineas y branches cubiertos)
-- (B.14) Se corren los test y pasan todos (se logra 100% de las lineas y branches)
-- (B.13) Se modifica test waitTurnTest, se cambio el tiempo de espera para que pase un turno de 900ms a 1200ms
+- (B.15) Se corren los test y pasan todos (se logra 100% de las lineas y branches)
+- (B.14) Se modifica test waitTurnTest, se cambio el tiempo de espera para que pase un turno de 900ms a 1200ms
 - (B.13) Se modifca el metodo equip() en playerCharacter para lograr lo que se pide en el enunciado (con double dispatch)
 - (B.12) Modificacion del test equipWeaponTest de la clase PlayerCharacterTest
 - (B.11) Se corren los test y pasan todos (se logra 100% de las lineas y branches)

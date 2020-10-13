@@ -31,9 +31,12 @@ class PlayerCharacterTest{
   private static final String THIEF_NAME = "Zidane";
   private static int LIFE = 1000;
   private static int DEFENSE = 30;
+  private static Integer MANA = 200;
 
   protected BlockingQueue<ICharacter> turns;
   protected List<PlayerCharacter> testCharacters;
+  protected WhiteMage whiteMage;
+  protected BlackMage blackMage;
   protected Weapon testWeapon;
 
   /**
@@ -47,8 +50,8 @@ class PlayerCharacterTest{
     testWeapon = new Axe("Test", 15, 10);
     testCharacters = new ArrayList<>();
 
-    testCharacters.add(new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE));
-    testCharacters.add(new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE));
+    blackMage = new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
+    whiteMage = new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
     testCharacters.add(new Engineer(ENGINEER_NAME,turns,LIFE,DEFENSE));
     testCharacters.add(new Knight(KNIGHT_NAME,turns,LIFE,DEFENSE));
     testCharacters.add(new Thief(THIEF_NAME,turns,LIFE,DEFENSE));
@@ -60,8 +63,8 @@ class PlayerCharacterTest{
   @Test
   void waitTurnTest() {
     Assertions.assertTrue(turns.isEmpty());
-    testCharacters.get(3).equip(testWeapon);
-    testCharacters.get(3).waitTurn();
+    testCharacters.get(0).equip(testWeapon);
+    testCharacters.get(0).waitTurn();
     try {
       // Thread.sleep is not accurate so this values may be changed to adjust the
       // acceptable error margin.
@@ -70,7 +73,7 @@ class PlayerCharacterTest{
       Assertions.assertEquals(0, turns.size());
       Thread.sleep(500);
       Assertions.assertEquals(1, turns.size());
-      Assertions.assertEquals(testCharacters.get(3), turns.peek());
+      Assertions.assertEquals(testCharacters.get(0), turns.peek());
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -126,19 +129,37 @@ class PlayerCharacterTest{
               new PlayerCharacter(characterName,turns,characterClass,LIFE,DEFENSE+1),
               enemy);
     }
+    checkConstruction(new BlackMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
+            blackMage,
+            new BlackMage("Test", turns, LIFE, DEFENSE, MANA),
+            new WhiteMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
+            new BlackMage(BLACK_MAGE_NAME, turns, LIFE + 1, DEFENSE, MANA),
+            new BlackMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE + 1, MANA),
+            enemy);
+    assertEquals(blackMage,blackMage);
+    assertNotEquals(blackMage,new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1));
+    assertNotEquals(blackMage.hashCode(),new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1).hashCode());
 
+    checkConstruction(new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA),
+            whiteMage,
+            new WhiteMage("Test", turns, LIFE, DEFENSE, MANA),
+            new BlackMage(WHITE_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
+            new WhiteMage(WHITE_MAGE_NAME,turns,LIFE+1,DEFENSE,MANA),
+            new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE+1,MANA),
+            enemy);
+    assertEquals(whiteMage,whiteMage);
+    assertNotEquals(whiteMage,new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1));
+    assertNotEquals(whiteMage.hashCode(),new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1).hashCode());
   }
 
   /**
-   * Cheks that the equip and getEquippedWeapon works properly.
+   * Checks that the equip and getEquippedWeapon works properly.
    */
   @Test
   void equipWeaponTest() {
-    PlayerCharacter blackMage = testCharacters.get(0);
-    PlayerCharacter whiteMage = testCharacters.get(1);
-    PlayerCharacter engineer = testCharacters.get(2);
-    PlayerCharacter knight = testCharacters.get(3);
-    PlayerCharacter thief = testCharacters.get(4);
+    PlayerCharacter engineer = testCharacters.get(0);
+    PlayerCharacter knight = testCharacters.get(1);
+    PlayerCharacter thief = testCharacters.get(2);
 
     Weapon axe = new Axe("War Axe", 10,15);
     Weapon bow = new Bow("War Bow", 10,15);

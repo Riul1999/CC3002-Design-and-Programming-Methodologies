@@ -83,27 +83,27 @@ public class Weapon {
   }
 
   /**
-   * Equip this weapon to the BlackMage
+   * Equip this weapon to a BlackMage
    */
   public void equipToBlackMage(BlackMage character){}
 
   /**
-   * Equip this weapon to the Engineer
+   * Equip this weapon to an Engineer
    */
   public void equipToEngineer(Engineer character){}
 
   /**
-   * Equip this weapon to the Knight
+   * Equip this weapon to a Knight
    */
   public void equipToKnight(Knight character){}
 
   /**
-   * Equip this weapon to the Thief
+   * Equip this weapon to a Thief
    */
   public void equipToThief(Thief character){}
 
   /**
-   * Equip this weapon to the WhiteMage
+   * Equip this weapon to a WhiteMage
    */
   public void equipToWhiteMage(WhiteMage character){}
 }

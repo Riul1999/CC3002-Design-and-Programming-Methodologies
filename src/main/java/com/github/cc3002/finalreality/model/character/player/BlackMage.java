@@ -24,12 +24,15 @@ public class BlackMage extends AbstractMagicCharacter{
      *      the black mage's life points
      * @param defense
      *      the black mage's defense
+     * @param maxMana
+     *      the black mage's maximun mana
      */
     public BlackMage(@NotNull String name,
                      @NotNull BlockingQueue<ICharacter> turnsQueue,
                      @NotNull Integer lifePoints,
-                     Integer defense) {
-        super(name, turnsQueue, CharacterClass.BLACK_MAGE,lifePoints,defense);
+                     Integer defense,
+                     @NotNull Integer maxMana) {
+        super(name, turnsQueue, CharacterClass.BLACK_MAGE,lifePoints,defense,maxMana);
     }
 
     @Override
