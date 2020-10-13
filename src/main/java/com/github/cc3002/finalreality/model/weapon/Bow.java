@@ -1,5 +1,7 @@
 package com.github.cc3002.finalreality.model.weapon;
 
+import com.github.cc3002.finalreality.model.character.player.*;
+
 /**
  * A class that holds all the information of a bow.
  *
@@ -21,5 +23,15 @@ public class Bow extends Weapon{
      */
     public Bow(final String name, final int damage, final int weight) {
         super(name,damage,weight,WeaponType.BOW);
+    }
+
+    @Override
+    public void equipToEngineer(Engineer character){
+        character.equipBow(this);
+    }
+
+    @Override
+    public void equipToThief(Thief character){
+        character.equipBow(this);
     }
 }

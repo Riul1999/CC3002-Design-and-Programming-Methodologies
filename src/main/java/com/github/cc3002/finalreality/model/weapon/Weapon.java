@@ -1,5 +1,7 @@
 package com.github.cc3002.finalreality.model.weapon;
 
+import com.github.cc3002.finalreality.model.character.player.*;
+
 import java.util.Objects;
 
 /**
@@ -79,4 +81,29 @@ public class Weapon {
   public int hashCode() {
     return Objects.hash(getName(), getDamage(), getWeight(), getType());
   }
+
+  /**
+   * Equip this weapon to a BlackMage
+   */
+  public void equipToBlackMage(BlackMage character){}
+
+  /**
+   * Equip this weapon to an Engineer
+   */
+  public void equipToEngineer(Engineer character){}
+
+  /**
+   * Equip this weapon to a Knight
+   */
+  public void equipToKnight(Knight character){}
+
+  /**
+   * Equip this weapon to a Thief
+   */
+  public void equipToThief(Thief character){}
+
+  /**
+   * Equip this weapon to a WhiteMage
+   */
+  public void equipToWhiteMage(WhiteMage character){}
 }

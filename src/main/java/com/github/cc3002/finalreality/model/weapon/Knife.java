@@ -1,5 +1,7 @@
 package com.github.cc3002.finalreality.model.weapon;
 
+import com.github.cc3002.finalreality.model.character.player.*;
+
 /**
  * A class that holds all the information of a knife.
  *
@@ -22,4 +24,15 @@ public class Knife extends Weapon{
     public Knife(final String name, final int damage, final int weight) {
         super(name,damage,weight,WeaponType.KNIFE);
     }
+
+    @Override
+    public void equipToBlackMage(BlackMage character){
+        character.equipKnife(this);
+    }
+
+    @Override
+    public void equipToKnight(Knight character){
+        character.equipKnife(this);
+    }
+
 }

@@ -21,12 +21,19 @@ public abstract class AbstractCharacter implements ICharacter {
   protected final String name;
   private final CharacterClass characterClass;
   protected ScheduledExecutorService scheduledExecutor;
+  protected Integer lifePoints;
+  protected Integer defense;
 
   protected AbstractCharacter(@NotNull BlockingQueue<ICharacter> turnsQueue,
-      @NotNull String name, CharacterClass characterClass) {
+                              @NotNull String name,
+                              CharacterClass characterClass,
+                              @NotNull Integer lifePoints,
+                              Integer defense) {
     this.turnsQueue = turnsQueue;
     this.name = name;
     this.characterClass = characterClass;
+    this.lifePoints = lifePoints;
+    this.defense = defense;
   }
 
   @Override
@@ -49,5 +56,11 @@ public abstract class AbstractCharacter implements ICharacter {
   public CharacterClass getCharacterClass() {
     return characterClass;
   }
+
+  @Override
+  public Integer getLifePoints() { return lifePoints;}
+
+  @Override
+  public Integer getDefense() { return defense;}
 
 }

@@ -17,15 +17,21 @@ import org.jetbrains.annotations.NotNull;
 public class Enemy extends AbstractCharacter {
 
   private final int weight;
+  private int damage;
 
   /**
    * Creates a new enemy with a name, a weight and the queue with the characters ready to
    * play.
    */
-  public Enemy(@NotNull final String name, final int weight,
-      @NotNull final BlockingQueue<ICharacter> turnsQueue) {
-    super(turnsQueue, name, CharacterClass.ENEMY);
+  public Enemy(@NotNull final String name,
+               final int weight,
+               @NotNull final BlockingQueue<ICharacter> turnsQueue,
+               @NotNull Integer lifePoints,
+               Integer defense,
+               Integer damage) {
+    super(turnsQueue, name, CharacterClass.ENEMY, lifePoints, defense);
     this.weight = weight;
+    this.damage = damage;
   }
 
   @Override
@@ -42,6 +48,11 @@ public class Enemy extends AbstractCharacter {
     return weight;
   }
 
+  /**
+   * Returns the damage of this enemy
+   */
+  public int getDamage() { return damage;}
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) {
@@ -52,11 +63,14 @@ public class Enemy extends AbstractCharacter {
     }
     final Enemy enemy = (Enemy) o;
     return getWeight() == enemy.getWeight() &&
-            getName() == enemy.getName();
+            getDamage() == enemy.getDamage() &&
+            getName().equals(enemy.getName()) &&
+            getLifePoints().equals(enemy.getLifePoints()) &&
+            getDefense().equals(enemy.getDefense());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(),getWeight());
+    return Objects.hash(getName(),getWeight(),getLifePoints(),getDefense(),getDamage());
   }
 }

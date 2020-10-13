@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -18,10 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class EnemyTest {
 
   private static final String ENEMY_NAME = "Goblin";
-  private static final String ENEMY_NAME2 = "Goblin Champion";
+  private static final int WEIGHT = 10;
+  private static int LIFE = 1000;
+  private static int DEFENSE = 30;
+  private static int DAMAGE= 16;
 
   protected BlockingQueue<ICharacter> turns;
-  protected List<Enemy> testCharacters;
+  protected Enemy testCharacters;
   protected Weapon testWeapon;
 
   /**
@@ -33,12 +34,7 @@ class EnemyTest {
   void setUp() {
     turns = new LinkedBlockingQueue<>();
     testWeapon = new Weapon("Test", 15, 10, WeaponType.AXE);
-    testCharacters = new ArrayList<>();
-
-    testCharacters.add(new Enemy(ENEMY_NAME, 10, turns));
-    testCharacters.add(new Enemy(ENEMY_NAME2, 10, turns));
-    testCharacters.add(new Enemy(ENEMY_NAME, 15, turns));
-    testCharacters.add(new Enemy(ENEMY_NAME2, 10, turns));
+    testCharacters = new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE);
   }
 
   /**
@@ -47,7 +43,7 @@ class EnemyTest {
   @Test
   void waitTurnTest() {
     Assertions.assertTrue(turns.isEmpty());
-    testCharacters.get(0).waitTurn();
+    testCharacters.waitTurn();
     try {
       // Thread.sleep is not accurate so this values may be changed to adjust the
       // acceptable error margin.
@@ -56,7 +52,7 @@ class EnemyTest {
       Assertions.assertEquals(0, turns.size());
       Thread.sleep(200);
       Assertions.assertEquals(1, turns.size());
-      Assertions.assertEquals(testCharacters.get(0), turns.peek());
+      Assertions.assertEquals(testCharacters, turns.peek());
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -64,25 +60,37 @@ class EnemyTest {
 
   /**
    * Checks that the equals method works properly.
-   * @param expectedCharacter Enemy
-   * @param testEqualCharacter Enemy
-   * @param sameClassDifferentWeight Enemy
-   * @param sameClassDifferentName Enemy
-   * @param differentClassCharacter PlayerCharacter
+   * @param expectedCharacter Same Enemy
+   * @param testEqualCharacter Test Enemy
+   * @param differentWeight Different weight Enemy
+   * @param differentDamage Different damage Enemy
+   * @param differentName Different name Enemy
+   * @param differentLifePoints Different life points Enemy
+   * @param differentDefense  Different defense Enemy
+   * @param differentClassCharacter Different object PlayerCharacter
    */
   protected static void checkConstruction(final ICharacter expectedCharacter,
                                    final ICharacter testEqualCharacter,
-                                   final ICharacter sameClassDifferentWeight,
-                                   final ICharacter sameClassDifferentName,
+                                   final ICharacter differentWeight,
+                                   final ICharacter differentDamage,
+                                   final ICharacter differentName,
+                                   final ICharacter differentLifePoints,
+                                   final ICharacter differentDefense,
                                    final ICharacter differentClassCharacter) {
     assertEquals(testEqualCharacter, expectedCharacter);
     assertEquals(testEqualCharacter.hashCode(),expectedCharacter.hashCode());
-    assertNotEquals(sameClassDifferentWeight, testEqualCharacter);
-    assertNotEquals(sameClassDifferentWeight.hashCode(),testEqualCharacter.hashCode());
-    assertNotEquals(sameClassDifferentName,expectedCharacter);
-    assertNotEquals(sameClassDifferentName.hashCode(),expectedCharacter.hashCode());
+    assertNotEquals(testEqualCharacter,differentWeight);
+    assertNotEquals(testEqualCharacter.hashCode(),differentWeight.hashCode());
+    assertNotEquals(testEqualCharacter,differentDamage);
+    assertNotEquals(testEqualCharacter.hashCode(),differentDamage.hashCode());
+    assertNotEquals(testEqualCharacter,differentName);
+    assertNotEquals(testEqualCharacter.hashCode(),differentName.hashCode());
+    assertNotEquals(testEqualCharacter,differentLifePoints);
+    assertNotEquals(testEqualCharacter.hashCode(),differentLifePoints.hashCode());
+    assertNotEquals(testEqualCharacter,differentDefense);
+    assertNotEquals(testEqualCharacter.hashCode(),differentDefense.hashCode());
     assertNotEquals(testEqualCharacter, differentClassCharacter);
-    assertNotEquals(differentClassCharacter.hashCode(),expectedCharacter.hashCode());
+    assertNotEquals(testEqualCharacter.hashCode(),differentClassCharacter.hashCode());
     assertNotEquals(testEqualCharacter.getClass(),differentClassCharacter.getClass());
   }
 
@@ -91,14 +99,13 @@ class EnemyTest {
    */
   @Test
   void constructorTest() {
-    for (var enemy : testCharacters) {
-      String name = enemy.getName();
-      int weight = enemy.getWeight();
-      checkConstruction(new Enemy(name, weight, turns),
-              enemy,
-              new Enemy(name, weight+1, turns),
-              new Enemy("test goblin",weight,turns),
-              new PlayerCharacter(name, turns, CharacterClass.THIEF));
-    }
+      checkConstruction(new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE),
+              testCharacters,
+              new Enemy(ENEMY_NAME, WEIGHT+1, turns, LIFE, DEFENSE, DAMAGE),
+              new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE+1),
+              new Enemy("test goblin", WEIGHT, turns, LIFE, DEFENSE, DAMAGE),
+              new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE+1, DEFENSE, DAMAGE),
+              new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE+1, DAMAGE),
+              new PlayerCharacter(ENEMY_NAME, turns, CharacterClass.THIEF, LIFE, DEFENSE));
   }
 }
