@@ -1,8 +1,5 @@
 package com.github.cc3002.finalreality.model.character;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import com.github.cc3002.finalreality.model.character.player.*;
 
 import java.util.ArrayList;
@@ -14,6 +11,8 @@ import com.github.cc3002.finalreality.model.weapon.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Set of tests for the {@code GameCharacter} class.
@@ -29,9 +28,9 @@ class PlayerCharacterTest{
   private static final String WHITE_MAGE_NAME = "Eiko";
   private static final String ENGINEER_NAME = "Cid";
   private static final String THIEF_NAME = "Zidane";
-  private static int LIFE = 1000;
-  private static int DEFENSE = 30;
-  private static Integer MANA = 200;
+  private static final Integer LIFE = 1000;
+  private static final Integer DEFENSE = 30;
+  private static final Integer MANA = 200;
 
   protected BlockingQueue<ICharacter> turns;
   protected List<PlayerCharacter> testCharacters;
@@ -62,7 +61,7 @@ class PlayerCharacterTest{
    */
   @Test
   void waitTurnTest() {
-    Assertions.assertTrue(turns.isEmpty());
+    assertTrue(turns.isEmpty());
     testCharacters.get(0).equip(testWeapon);
     testCharacters.get(0).waitTurn();
     try {
@@ -232,5 +231,175 @@ class PlayerCharacterTest{
     assertEquals(knight.getEquippedWeapon(),knife);
     thief.equip(knife);
     assertNotEquals(thief.getEquippedWeapon(),knife);
+  }
+
+  @Test
+  public void attackTest(){
+    PlayerCharacter player = testCharacters.get(0);
+    Enemy enemy = new Enemy("Enemy", 10, turns, LIFE, DEFENSE, 10);
+    assertEquals(LIFE, player.getLifePoints());
+    Integer expLifePoints = player.getLifePoints() - (enemy.getDamage() - player.getDefense());
+    enemy.attack(player);
+    assertEquals(expLifePoints , player.getLifePoints());
+  }
+
+  @Test
+  public void aliveTest() {
+    PlayerCharacter player = testCharacters.get(0);
+    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+    assertTrue(player.alive());
+    enemy.attack(player);
+    assertFalse(player.alive());
+
+    PlayerCharacter player2 = testCharacters.get(1);
+    Enemy enemy2 = new Enemy("Slime", 10, turns , LIFE , DEFENSE, 0);
+    assertTrue(player2.alive());
+    enemy2.attack(player2);
+    assertTrue(player2.alive());
+  }
+
+  @Test
+  public void aliveAttackTest() {
+    PlayerCharacter player = testCharacters.get(0);
+    PlayerCharacter player2 = testCharacters.get(1);
+    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+    Axe axe = new Axe("Dicky's axe", 100 , 10);
+    player.equip(axe);
+    player2.equip(axe);
+    assertTrue(player.alive());
+    assertTrue(player2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(player2);
+    assertEquals(LIFE,enemy.getLifePoints());
+    player2.attack(enemy);
+    assertEquals(LIFE,enemy.getLifePoints());
+    player.attack(enemy);
+    assertNotEquals(LIFE,enemy.getLifePoints());
+  }
+
+  @Test
+  public void aliveEquipTest() {
+    Engineer engineer = (Engineer) testCharacters.get(0);
+    Engineer engineer2 = new Engineer(ENGINEER_NAME,turns,LIFE,DEFENSE);
+    Knight knight = (Knight) testCharacters.get(1);
+    Knight knight2 = new Knight(ENGINEER_NAME,turns,LIFE,DEFENSE);
+    Thief thief = (Thief) testCharacters.get(2);
+    Thief thief2 = new Thief(ENGINEER_NAME,turns,LIFE,DEFENSE);
+    WhiteMage whiteWizard = whiteMage;
+    WhiteMage whiteWizard2 = new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
+    BlackMage blackWizard = blackMage;
+    BlackMage blackWizard2 = new BlackMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
+
+    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+
+    Weapon defaultWeapon = new Weapon("NULL",0,-1, WeaponType.NULLWEAPON);
+    Axe testAxe = new Axe("Dicky's axe", 100 , 10);
+    Sword testSword = new Sword("Dicky's sword", 100 , 10);
+    Knife testKnife = new Knife("Dicky's knife", 100 , 10);
+    Bow testBow = new Bow("Dicky's bow", 100 , 10);
+    Staff testStaff = new Staff("Dicky's staff", 100 , 10 , 100);
+
+    assertTrue(engineer.alive());
+    assertTrue(engineer2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(engineer2);
+
+    assertEquals(defaultWeapon , engineer2.getEquippedWeapon());
+    engineer2.equip(testAxe);
+    assertEquals(defaultWeapon , engineer2.getEquippedWeapon());
+    assertEquals(defaultWeapon , engineer.getEquippedWeapon());
+    engineer.equip(testAxe);
+    assertEquals(testAxe,engineer.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , engineer2.getEquippedWeapon());
+    engineer2.equip(testBow);
+    assertEquals(defaultWeapon , engineer2.getEquippedWeapon());
+    assertEquals(testAxe , engineer.getEquippedWeapon());
+    engineer.equip(testBow);
+    assertEquals(testBow,engineer.getEquippedWeapon());
+
+    assertTrue(knight.alive());
+    assertTrue(knight2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(knight2);
+
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    knight2.equip(testAxe);
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    assertEquals(defaultWeapon , knight.getEquippedWeapon());
+    knight.equip(testAxe);
+    assertEquals(testAxe,knight.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    knight2.equip(testSword);
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    assertEquals(testAxe , knight.getEquippedWeapon());
+    knight.equip(testSword);
+    assertEquals(testSword,knight.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    knight2.equip(testKnife);
+    assertEquals(defaultWeapon , knight2.getEquippedWeapon());
+    assertEquals(testSword , knight.getEquippedWeapon());
+    knight.equip(testKnife);
+    assertEquals(testKnife,knight.getEquippedWeapon());
+
+    assertTrue(thief.alive());
+    assertTrue(thief2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(thief2);
+
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    thief2.equip(testSword);
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    assertEquals(defaultWeapon , thief.getEquippedWeapon());
+    thief.equip(testSword);
+    assertEquals(testSword,thief.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    thief2.equip(testStaff);
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    assertEquals(testSword , thief.getEquippedWeapon());
+    thief.equip(testStaff);
+    assertEquals(testStaff,thief.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    thief2.equip(testBow);
+    assertEquals(defaultWeapon , thief2.getEquippedWeapon());
+    assertEquals(testStaff , thief.getEquippedWeapon());
+    thief.equip(testBow);
+    assertEquals(testBow,thief.getEquippedWeapon());
+
+    assertTrue(whiteWizard.alive());
+    assertTrue(whiteWizard2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(whiteWizard2);
+
+    assertEquals(defaultWeapon , whiteWizard2.getEquippedWeapon());
+    whiteWizard2.equip(testStaff);
+    assertEquals(defaultWeapon , whiteWizard2.getEquippedWeapon());
+    assertEquals(defaultWeapon , whiteWizard.getEquippedWeapon());
+    whiteWizard.equip(testStaff);
+    assertEquals(testStaff,whiteWizard.getEquippedWeapon());
+
+    assertTrue(blackWizard.alive());
+    assertTrue(blackWizard2.alive());
+    assertTrue(enemy.alive());
+    enemy.attack(blackWizard2);
+
+    assertEquals(defaultWeapon , blackWizard2.getEquippedWeapon());
+    blackWizard2.equip(testKnife);
+    assertEquals(defaultWeapon , blackWizard2.getEquippedWeapon());
+    assertEquals(defaultWeapon , blackWizard.getEquippedWeapon());
+    blackWizard.equip(testKnife);
+    assertEquals(testKnife,blackWizard.getEquippedWeapon());
+
+    assertEquals(defaultWeapon , blackWizard2.getEquippedWeapon());
+    blackWizard2.equip(testStaff);
+    assertEquals(defaultWeapon , blackWizard2.getEquippedWeapon());
+    assertEquals(testKnife , blackWizard.getEquippedWeapon());
+    blackWizard.equip(testStaff);
+    assertEquals(testStaff,blackWizard.getEquippedWeapon());
+
   }
 }

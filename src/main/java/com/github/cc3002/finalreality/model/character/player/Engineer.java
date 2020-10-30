@@ -35,6 +35,6 @@ public class Engineer extends AbstractCommonCharacter{
 
     @Override
     public void equip(Weapon weapon) {
-        weapon.equipToEngineer(this);
+        if (this.alive()) weapon.equipToEngineer(this);
     }
 }

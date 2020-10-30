@@ -38,6 +38,6 @@ public class WhiteMage extends AbstractMagicCharacter{
 
     @Override
     public void equip(Weapon weapon) {
-        weapon.equipToWhiteMage(this);
+        if (this.alive()) weapon.equipToWhiteMage(this);
     }
 }

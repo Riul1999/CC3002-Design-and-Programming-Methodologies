@@ -1,7 +1,9 @@
 package com.github.cc3002.finalreality.model.character;
 
 import com.github.cc3002.finalreality.model.character.player.CharacterClass;
+import com.github.cc3002.finalreality.model.character.player.Knight;
 import com.github.cc3002.finalreality.model.character.player.PlayerCharacter;
+import com.github.cc3002.finalreality.model.weapon.Axe;
 import com.github.cc3002.finalreality.model.weapon.Weapon;
 import com.github.cc3002.finalreality.model.weapon.WeaponType;
 import org.junit.jupiter.api.Assertions;
@@ -17,9 +19,9 @@ class EnemyTest {
 
   private static final String ENEMY_NAME = "Goblin";
   private static final int WEIGHT = 10;
-  private static int LIFE = 1000;
-  private static int DEFENSE = 30;
-  private static int DAMAGE= 16;
+  private static Integer LIFE = 1000;
+  private static Integer DEFENSE = 30;
+  private static Integer DAMAGE= 16;
 
   protected BlockingQueue<ICharacter> turns;
   protected Enemy testCharacters;
@@ -107,5 +109,52 @@ class EnemyTest {
               new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE+1, DEFENSE, DAMAGE),
               new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE+1, DAMAGE),
               new PlayerCharacter(ENEMY_NAME, turns, CharacterClass.THIEF, LIFE, DEFENSE));
+  }
+
+  @Test
+  public void attackTest(){
+    Enemy enemy = testCharacters;
+    Knight player = new Knight("King", turns , LIFE , DEFENSE);
+    Axe axe = new Axe("King's axe" , 10 , WEIGHT);
+    player.equip(axe);
+    assertEquals(LIFE, enemy.getLifePoints());
+    Integer expLifePoints = enemy.getLifePoints() - (player.getDamage() - enemy.getDefense());
+    player.attack(enemy);
+    assertEquals(expLifePoints , enemy.getLifePoints());
+  }
+
+  @Test
+  public void aliveTest() {
+    Enemy enemy = testCharacters;
+    Knight player = new Knight("God", turns , LIFE , DEFENSE);
+    Axe axe = new Axe("God's axe" , 2000 , WEIGHT);
+    player.equip(axe);
+    assertTrue(enemy.alive());
+    player.attack(enemy);
+    assertFalse(enemy.alive());
+
+    Enemy enemy2 = new Enemy(ENEMY_NAME, WEIGHT, turns, LIFE, DEFENSE, DAMAGE);
+    Knight player2 = new Knight("Dicky", turns , LIFE , DEFENSE);
+    assertTrue(enemy2.alive());
+    player2.attack(enemy2);
+    assertTrue(enemy2.alive());
+  }
+
+  @Test
+  public void aliveAttackTest() {
+    Enemy enemy = testCharacters;
+    Enemy enemy2 = new Enemy( "Dead" , WEIGHT , turns , 10 , DEFENSE , DAMAGE);
+    Knight player = new Knight("Dicky", turns , LIFE , DEFENSE);
+    Axe axe = new Axe("Dicky's axe", 100 , WEIGHT);
+    player.equip(axe);
+    assertTrue(enemy.alive());
+    assertTrue(enemy2.alive());
+    assertTrue(player.alive());
+    player.attack(enemy2);
+    assertEquals(LIFE,player.getLifePoints());
+    enemy2.attack(player);
+    assertEquals(LIFE,player.getLifePoints());
+    enemy.attack(player);
+    assertNotEquals(LIFE,player.getLifePoints());
   }
 }

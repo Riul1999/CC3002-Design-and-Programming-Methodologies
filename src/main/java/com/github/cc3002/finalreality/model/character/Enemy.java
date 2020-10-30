@@ -16,22 +16,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Enemy extends AbstractCharacter {
 
-  private final int weight;
-  private int damage;
+  private final Integer weight;
 
   /**
    * Creates a new enemy with a name, a weight and the queue with the characters ready to
    * play.
    */
   public Enemy(@NotNull final String name,
-               final int weight,
+               final Integer weight,
                @NotNull final BlockingQueue<ICharacter> turnsQueue,
                @NotNull Integer lifePoints,
                Integer defense,
                Integer damage) {
-    super(turnsQueue, name, CharacterClass.ENEMY, lifePoints, defense);
+    super(turnsQueue, name, CharacterClass.ENEMY, lifePoints, defense, damage);
     this.weight = weight;
-    this.damage = damage;
   }
 
   @Override
@@ -44,14 +42,12 @@ public class Enemy extends AbstractCharacter {
   /**
    * Returns the weight of this enemy.
    */
-  public int getWeight() {
+  public Integer getWeight() {
     return weight;
   }
 
-  /**
-   * Returns the damage of this enemy
-   */
-  public int getDamage() { return damage;}
+  @Override
+  public Integer getDamage() {return damage;}
 
   @Override
   public boolean equals(final Object o) {
@@ -62,8 +58,8 @@ public class Enemy extends AbstractCharacter {
       return false;
     }
     final Enemy enemy = (Enemy) o;
-    return getWeight() == enemy.getWeight() &&
-            getDamage() == enemy.getDamage() &&
+    return getWeight().equals(enemy.getWeight()) &&
+            getDamage().equals(enemy.getDamage()) &&
             getName().equals(enemy.getName()) &&
             getLifePoints().equals(enemy.getLifePoints()) &&
             getDefense().equals(enemy.getDefense());

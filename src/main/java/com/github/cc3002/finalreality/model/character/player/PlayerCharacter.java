@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerCharacter extends AbstractCharacter {
 
-  protected Weapon equippedWeapon = new Weapon("NULL",-1,-1, WeaponType.NULLWEAPON);
+  protected Weapon equippedWeapon = new Weapon("NULL",0,-1, WeaponType.NULLWEAPON);
 
   /**
    * Creates a new character.
@@ -41,7 +41,7 @@ public class PlayerCharacter extends AbstractCharacter {
                          final CharacterClass characterClass,
                          @NotNull Integer lifePoints,
                          Integer defense) {
-    super(turnsQueue, name, characterClass, lifePoints, defense);
+    super(turnsQueue, name, characterClass, lifePoints, defense, 0);
   }
 
   @Override
@@ -91,6 +91,9 @@ public class PlayerCharacter extends AbstractCharacter {
   public Weapon getEquippedWeapon() {
     return equippedWeapon;
   }
+
+  @Override
+  public Integer getDamage() {return equippedWeapon.getDamage();}
 
   @Override
   public int hashCode() {
