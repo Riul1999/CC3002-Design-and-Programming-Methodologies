@@ -35,6 +35,6 @@ public class Thief extends AbstractCommonCharacter{
 
     @Override
     public void equip(Weapon weapon) {
-        weapon.equipToThief(this);
+        if(this.alive()) weapon.equipToThief(this);
     }
 }

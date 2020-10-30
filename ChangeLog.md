@@ -1,9 +1,26 @@
 ChangeLog
 =========
 
+Version 4.0
+-----------
+- (RC.1) Nuevas funcionaliades implementadas y se asegura 100% de lineas y branches cubiertas
+- (B.13) Se corren los test y se asegura el 100% de lineas y branches cubiertas
+- (B.12) Se implementa la nueva funcionalidad de equipWeapon(), para hacerlo se agrega la branch a los metodos definidos en cada clase jugador, esto a ojos del programador queda mejor que renombrar los ya existentes y crear un metodo cobertor para implmentar la nueva funcionalidad
+- (B.11) Testeo de agregar alive() como condicion para equip(), el metodo no debe hacer nada si alive() es false
+- (B.10) Se corren los test y se asegura el 100% de lineas y branches cubiertas
+- (B.9) Se implementa la nueva funcionalidad de attack, para hacerlo se decide modificar el metodo ya existe, esto porque solo se le agregara una branch, en vez renombrarlo y crear un nuevo metodo que implemente esto, que a ojos del programador quedaria peor
+- (B.8) Testeo de agregar alive() como condicion para attack, el metodo no debe hacer nada si alive() es false
+- (B.7) Se corren los test y se asegura el 100% de lineas y branches cubiertas
+- (B.6) Se declara el metodo en la interfaz ICharacter y se implementa el metodo en la clase AbstractCharacter
+- (B.5) Testo de nueva funcionalidad vivo(), que indice si el ICharacter sigue vivo, este test se hara tanto en PlayerCharacterTest como en EnemyTest
+- (B.4) Se corren los test y se asegura el 100% de lineas y branches cubiertas
+- (B.3) Se descubre una incongruencia entre el tipo de los parametros de los objetos y se normalizan todos los parametros numericos al tipo Integer
+- (B.2) Se crea el metodo en la clase abstracta AbstractCharacter y se ve la necesidad de crear un metodo getDamage() para los playerCharacter
+- (B.1) Testeo de nueva funcionalidad ataque, que recibe 2 AbstractCharacter y debe disminuir la vida del segundo, este se hace tanto en Player como Enemy Test, se asumira que solo un PlayerCharacter puede atacar a un Enemy y viceversa, no se pueden atacar entre ellos.
+
 Version 3.0
 -----------
-- (RC.3) Nuevos paramtros, metodos y testeo correctos (asegurado 100% de las luneas y branches cubiertos)
+- (RC.3) Nuevos parametros, metodos y testeo correctos (asegurado 100% de las lineas y branches cubiertos)
 - (B.19) Se corren los test y pasan todos (se logra 100% de lineas y branches)
 - (B.18) Se modifica la clase PlayerCharacterTest para testear la nueva funcionalidad
 - (B.17) Modificacion de la AbstractMagicCharacter y sus subclases, nuevo parametro y metodos equals() y hashCode)() sobreescritos

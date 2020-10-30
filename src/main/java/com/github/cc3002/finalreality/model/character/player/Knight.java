@@ -34,7 +34,6 @@ public class Knight extends AbstractCommonCharacter{
     }
 
     @Override
-    public void equip(Weapon weapon) {
-        weapon.equipToKnight(this);
+    public void equip(Weapon weapon) { if(this.alive()) weapon.equipToKnight(this);
     }
 }

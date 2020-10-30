@@ -1,12 +1,10 @@
 package com.github.cc3002.finalreality.model.character;
 
 import com.github.cc3002.finalreality.model.character.player.CharacterClass;
-import com.github.cc3002.finalreality.model.character.player.PlayerCharacter;
-import com.github.cc3002.finalreality.model.weapon.Weapon;
+
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,17 +21,20 @@ public abstract class AbstractCharacter implements ICharacter {
   protected ScheduledExecutorService scheduledExecutor;
   protected Integer lifePoints;
   protected Integer defense;
+  protected Integer damage;
 
   protected AbstractCharacter(@NotNull BlockingQueue<ICharacter> turnsQueue,
                               @NotNull String name,
                               CharacterClass characterClass,
                               @NotNull Integer lifePoints,
-                              Integer defense) {
+                              Integer defense,
+                              Integer damage) {
     this.turnsQueue = turnsQueue;
     this.name = name;
     this.characterClass = characterClass;
     this.lifePoints = lifePoints;
     this.defense = defense;
+    this.damage = damage;
   }
 
   @Override
@@ -46,6 +47,19 @@ public abstract class AbstractCharacter implements ICharacter {
     turnsQueue.add(this);
     scheduledExecutor.shutdown();
   }
+
+  @Override
+  public void attack(ICharacter iCharacter) {
+    if (this.alive()) iCharacter.receiveDamage(this.getDamage());
+  }
+
+  @Override
+  public void receiveDamage(Integer damage) {
+    this.lifePoints -= (damage - this.defense);
+  }
+
+  @Override
+  public boolean alive() { return this.lifePoints > 0; }
 
   @Override
   public String getName() {
@@ -63,4 +77,6 @@ public abstract class AbstractCharacter implements ICharacter {
   @Override
   public Integer getDefense() { return defense;}
 
+  @Override
+  public abstract Integer getDamage();
 }

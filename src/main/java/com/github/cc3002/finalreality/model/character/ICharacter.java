@@ -1,7 +1,6 @@
 package com.github.cc3002.finalreality.model.character;
 
 import com.github.cc3002.finalreality.model.character.player.CharacterClass;
-import com.github.cc3002.finalreality.model.weapon.Weapon;
 
 /**
  * This represents a character from the game.
@@ -37,4 +36,28 @@ public interface ICharacter {
    * Returns this character's defense
    */
   Integer getDefense();
+
+  /**
+   * Returns the damage of this enemy
+   */
+  Integer getDamage();
+
+  /**
+   * Emulates that this ICharacter attacks iCharacter, this method reduce the iCharacter's lifePoints
+   * the same amount as the attack of this ICharacter minus the iCharacter's defense
+   * @param iCharacter the attacked character
+   */
+  void attack(ICharacter iCharacter);
+
+  /**
+   * Dismiss this ICharacter lifePoints the same amount as this ICharacter defense minus damage
+   * @param damage the damage received
+   */
+  void receiveDamage(Integer damage);
+
+  /**
+   * Returns true if the ICharacter is alive or false if it isn't, if the ICharacter has more than 0
+   * lifePoints, it's alive
+   */
+  boolean alive();
 }
