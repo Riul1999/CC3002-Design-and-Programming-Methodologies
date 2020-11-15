@@ -1,6 +1,5 @@
 package com.github.cc3002.finalreality.model.character;
 
-import com.github.cc3002.finalreality.model.character.player.CharacterClass;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -23,12 +22,12 @@ public class Enemy extends AbstractCharacter {
    * play.
    */
   public Enemy(@NotNull final String name,
-               final Integer weight,
                @NotNull final BlockingQueue<ICharacter> turnsQueue,
                @NotNull Integer lifePoints,
                Integer defense,
-               Integer damage) {
-    super(turnsQueue, name, CharacterClass.ENEMY, lifePoints, defense, damage);
+               Integer damage,
+               final Integer weight) {
+    super(turnsQueue, name, lifePoints, defense, damage);
     this.weight = weight;
   }
 
@@ -51,22 +50,15 @@ public class Enemy extends AbstractCharacter {
 
   @Override
   public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
     if (!(o instanceof Enemy)) {
       return false;
     }
     final Enemy enemy = (Enemy) o;
-    return getWeight().equals(enemy.getWeight()) &&
-            getDamage().equals(enemy.getDamage()) &&
-            getName().equals(enemy.getName()) &&
-            getLifePoints().equals(enemy.getLifePoints()) &&
-            getDefense().equals(enemy.getDefense());
+    return  getWeight().equals(enemy.getWeight()) && super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(),getWeight(),getLifePoints(),getDefense(),getDamage());
+    return Objects.hash(super.hashCode(),getWeight(),Enemy.class);
   }
 }

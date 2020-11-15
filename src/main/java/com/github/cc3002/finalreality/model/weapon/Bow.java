@@ -1,6 +1,9 @@
 package com.github.cc3002.finalreality.model.weapon;
 
-import com.github.cc3002.finalreality.model.character.player.*;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Engineer;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+
+import java.util.Objects;
 
 /**
  * A class that holds all the information of a bow.
@@ -8,7 +11,7 @@ import com.github.cc3002.finalreality.model.character.player.*;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class Bow extends Weapon{
+public class Bow extends AbstractWeapon {
 
     /**
      * Creates a bow with a name, a base damage and it's weight.
@@ -22,7 +25,17 @@ public class Bow extends Weapon{
      *
      */
     public Bow(final String name, final int damage, final int weight) {
-        super(name,damage,weight,WeaponType.BOW);
+        super(name,damage,weight);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ( o instanceof Bow && super.equals(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), Bow.class);
     }
 
     @Override

@@ -1,9 +1,10 @@
-package com.github.cc3002.finalreality.model.character.player;
+package com.github.cc3002.finalreality.model.character.player.commonCharacter;
 
 import com.github.cc3002.finalreality.model.character.ICharacter;
-import com.github.cc3002.finalreality.model.weapon.Weapon;
+import com.github.cc3002.finalreality.model.weapon.IWeapon;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -12,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class Thief extends AbstractCommonCharacter{
+public class Thief extends AbstractCommonCharacter {
 
     /**
      *
@@ -30,11 +31,21 @@ public class Thief extends AbstractCommonCharacter{
                   @NotNull BlockingQueue<ICharacter> turnsQueue,
                  @NotNull Integer lifePoints,
                  Integer defense) {
-        super(name, turnsQueue, CharacterClass.THIEF, lifePoints, defense);
+        super(name, turnsQueue, lifePoints, defense);
     }
 
     @Override
-    public void equip(Weapon weapon) {
+    public void equip(IWeapon weapon) {
         if(this.alive()) weapon.equipToThief(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ( o instanceof Thief && super.equals(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( super.hashCode() , Thief.class );
     }
 }

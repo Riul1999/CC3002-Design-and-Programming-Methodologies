@@ -4,11 +4,13 @@ import com.github.cc3002.finalreality.model.character.player.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.BlackMage;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Engineer;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.WhiteMage;
 import com.github.cc3002.finalreality.model.weapon.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
- * @see PlayerCharacter
+ * @see AbstractPlayerCharacter
  */
-class PlayerCharacterTest{
+class PlayerCharacterTest extends AbstractCharacterTest{
 
   private static final String BLACK_MAGE_NAME = "Vivi";
   private static final String KNIGHT_NAME = "Adelbert";
@@ -32,11 +34,9 @@ class PlayerCharacterTest{
   private static final Integer DEFENSE = 30;
   private static final Integer MANA = 200;
 
-  protected BlockingQueue<ICharacter> turns;
-  protected List<PlayerCharacter> testCharacters;
+  protected List<IPlayerCharacter> testCharacters;
   protected WhiteMage whiteMage;
   protected BlackMage blackMage;
-  protected Weapon testWeapon;
 
   /**
    * Setup method.
@@ -45,8 +45,7 @@ class PlayerCharacterTest{
    */
   @BeforeEach
   void setUp() {
-    turns = new LinkedBlockingQueue<>();
-    testWeapon = new Axe("Test", 15, 10);
+    abstractCharacterBasicSetUp();
     testCharacters = new ArrayList<>();
 
     blackMage = new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
@@ -61,52 +60,41 @@ class PlayerCharacterTest{
    */
   @Test
   void waitTurnTest() {
-    assertTrue(turns.isEmpty());
-    testCharacters.get(0).equip(testWeapon);
-    testCharacters.get(0).waitTurn();
-    try {
-      // Thread.sleep is not accurate so this values may be changed to adjust the
-      // acceptable error margin.
-      // We're testing that the character waits approximately 1 second.
-      Thread.sleep(700);
-      Assertions.assertEquals(0, turns.size());
-      Thread.sleep(500);
-      Assertions.assertEquals(1, turns.size());
-      Assertions.assertEquals(testCharacters.get(0), turns.peek());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    abstractCharacterWaitTurn(testCharacters.get(0));
   }
 
   /**
    * Checks that the equals method works properly.
    * @param expectedCharacter Same PlayerCharacter
    * @param testEqualCharacter Test PlayerCharacter
-   * @param sameClassDifferentName Different name PlayerCharacter
-   * @param differentClassCharacter Different class PlayerCharacter
+   * @param differentClassCharacter Enemy different object Enemy
+   * @param differentName Different name PlayerCharacter
    * @param differentLifePoints Different life points PlayerCharacter
    * @param differentDefense  Different defense PlayerCharacter
-   * @param enemy Enemy different object Enemy
+   * @param differentTypePlayerCharacter Different class PlayerCharacter
    */
-  protected void checkConstruction(final ICharacter expectedCharacter,
-                                   final ICharacter testEqualCharacter,
-                                   final ICharacter sameClassDifferentName,
+  protected void checkConstruction(final IPlayerCharacter expectedCharacter,
+                                   final IPlayerCharacter testEqualCharacter,
                                    final ICharacter differentClassCharacter,
-                                   final ICharacter differentLifePoints,
-                                   final ICharacter differentDefense,
-                                   final ICharacter enemy) {
-    assertEquals(expectedCharacter, testEqualCharacter);
-    assertEquals(expectedCharacter.hashCode(),testEqualCharacter.hashCode());
-    assertNotEquals(testEqualCharacter,sameClassDifferentName);
-    assertNotEquals(testEqualCharacter.hashCode(),sameClassDifferentName.hashCode());
-    assertNotEquals(testEqualCharacter, differentClassCharacter);
-    assertNotEquals(testEqualCharacter.hashCode(),differentClassCharacter.hashCode());
-    assertNotEquals(testEqualCharacter, differentLifePoints);
-    assertNotEquals(testEqualCharacter.hashCode(),differentLifePoints.hashCode());
-    assertNotEquals(testEqualCharacter, differentDefense);
-    assertNotEquals(testEqualCharacter.hashCode(),differentDefense.hashCode());
-    assertNotEquals(testEqualCharacter, enemy);
-    assertNotEquals(testEqualCharacter.hashCode(),enemy.hashCode());
+                                   final IPlayerCharacter differentName,
+                                   final IPlayerCharacter differentLifePoints,
+                                   final IPlayerCharacter differentDefense,
+                                   final IPlayerCharacter differentTypePlayerCharacter,
+                                   final IPlayerCharacter differentWeapon) {
+
+    abstractCharacterCheckConstruction(expectedCharacter,
+                                       testEqualCharacter,
+                                       differentClassCharacter,
+                                       differentName,
+                                       differentLifePoints,
+                                       differentDefense);
+
+    assertNotEquals(testEqualCharacter, differentTypePlayerCharacter);
+    assertNotEquals(testEqualCharacter.hashCode(), differentTypePlayerCharacter.hashCode());
+
+    assertNotEquals(testEqualCharacter, differentWeapon);
+    assertNotEquals(testEqualCharacter.hashCode(), differentWeapon.hashCode());
+
   }
 
   /**
@@ -114,38 +102,56 @@ class PlayerCharacterTest{
    */
   @Test
   void constructorTest() {
-    var enemy = new Enemy("Enemy", 10, turns, LIFE, DEFENSE, 10);
-    for (var character :
-        testCharacters) {
-      var characterClass = character.getCharacterClass();
-      var characterName = character.getName();
-      checkConstruction(new PlayerCharacter(characterName, turns, characterClass, LIFE, DEFENSE),
-              character,
-              new PlayerCharacter("Test", turns, characterClass, LIFE, DEFENSE),
-              new PlayerCharacter(characterName, turns,
-                characterClass == CharacterClass.THIEF ? CharacterClass.BLACK_MAGE : CharacterClass.THIEF,LIFE,DEFENSE),
-              new PlayerCharacter(characterName, turns, characterClass, LIFE+1, DEFENSE),
-              new PlayerCharacter(characterName,turns,characterClass,LIFE,DEFENSE+1),
-              enemy);
-    }
+    Engineer armedEngineer = new Engineer(ENGINEER_NAME, turns, LIFE, DEFENSE);
+    armedEngineer.equip(new Axe("Test Axe",10,15));
+    Enemy enemy = new Enemy("Enemy", turns, LIFE, DEFENSE, 10, 10);
+    checkConstruction(new Engineer(ENGINEER_NAME, turns, LIFE, DEFENSE),
+                      testCharacters.get(0),
+                      enemy,
+                      new Engineer("Test", turns, LIFE, DEFENSE),
+                      new Engineer(ENGINEER_NAME, turns, LIFE+1, DEFENSE),
+                      new Engineer(ENGINEER_NAME,turns, LIFE,DEFENSE+1),
+                      new Knight(ENGINEER_NAME, turns, LIFE,DEFENSE),
+                      armedEngineer);
+
+    Knight armedKnight = new Knight(KNIGHT_NAME, turns, LIFE, DEFENSE);
+    armedKnight.equip(new Axe("Test Axe",10,15));
+    checkConstruction(new Knight(KNIGHT_NAME, turns, LIFE, DEFENSE),
+              testCharacters.get(1),
+            enemy, new Knight("Test", turns, LIFE, DEFENSE),
+            new Knight(KNIGHT_NAME, turns, LIFE+1, DEFENSE), new Knight(KNIGHT_NAME,turns, LIFE,DEFENSE+1), new Engineer(KNIGHT_NAME, turns, LIFE,DEFENSE),
+            armedKnight
+    );
+
+    Thief armedThief = new Thief(THIEF_NAME, turns, LIFE, DEFENSE);
+    armedThief.equip(new Sword("Test Sword",10,15));
+    checkConstruction(new Thief(THIEF_NAME, turns, LIFE, DEFENSE),
+            testCharacters.get(2),
+            enemy, new Thief("Test", turns, LIFE, DEFENSE),
+            new Thief(THIEF_NAME, turns, LIFE+1, DEFENSE), new Thief(THIEF_NAME,turns, LIFE,DEFENSE+1), new Engineer(THIEF_NAME, turns, LIFE,DEFENSE),
+            armedThief
+    );
+
+    BlackMage armedBlackMage = new BlackMage(ENGINEER_NAME, turns, LIFE, DEFENSE,MANA);
+    armedBlackMage.equip(new Knife("Test Axe",10,15));
     checkConstruction(new BlackMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
             blackMage,
-            new BlackMage("Test", turns, LIFE, DEFENSE, MANA),
-            new WhiteMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
-            new BlackMage(BLACK_MAGE_NAME, turns, LIFE + 1, DEFENSE, MANA),
-            new BlackMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE + 1, MANA),
-            enemy);
+            enemy, new BlackMage("Test", turns, LIFE, DEFENSE, MANA),
+            new BlackMage(BLACK_MAGE_NAME, turns, LIFE + 1, DEFENSE, MANA), new BlackMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE + 1, MANA), new WhiteMage(BLACK_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
+            armedBlackMage
+    );
     assertEquals(blackMage,blackMage);
     assertNotEquals(blackMage,new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1));
     assertNotEquals(blackMage.hashCode(),new BlackMage(BLACK_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1).hashCode());
 
+    WhiteMage armedWhiteMage = new WhiteMage(ENGINEER_NAME, turns, LIFE, DEFENSE,MANA);
+    armedWhiteMage.equip(new Staff("Test Axe",10,15,100));
     checkConstruction(new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA),
             whiteMage,
-            new WhiteMage("Test", turns, LIFE, DEFENSE, MANA),
-            new BlackMage(WHITE_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
-            new WhiteMage(WHITE_MAGE_NAME,turns,LIFE+1,DEFENSE,MANA),
-            new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE+1,MANA),
-            enemy);
+            enemy, new WhiteMage("Test", turns, LIFE, DEFENSE, MANA),
+            new WhiteMage(WHITE_MAGE_NAME,turns,LIFE+1,DEFENSE,MANA), new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE+1,MANA), new BlackMage(WHITE_MAGE_NAME, turns, LIFE, DEFENSE, MANA),
+            armedWhiteMage
+    );
     assertEquals(whiteMage,whiteMage);
     assertNotEquals(whiteMage,new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1));
     assertNotEquals(whiteMage.hashCode(),new WhiteMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA+1).hashCode());
@@ -156,25 +162,26 @@ class PlayerCharacterTest{
    */
   @Test
   void equipWeaponTest() {
-    PlayerCharacter engineer = testCharacters.get(0);
-    PlayerCharacter knight = testCharacters.get(1);
-    PlayerCharacter thief = testCharacters.get(2);
+    IPlayerCharacter engineer = testCharacters.get(0);
+    IPlayerCharacter knight = testCharacters.get(1);
+    IPlayerCharacter thief = testCharacters.get(2);
 
-    Weapon axe = new Axe("War Axe", 10,15);
-    Weapon bow = new Bow("War Bow", 10,15);
-    Weapon staff = new Staff("War Staff", 10,15,15);
-    Weapon sword = new Sword("War Sword", 10,15);
-    Weapon knife = new Knife("War Knife", 10,15);
+    IWeapon axe = new Axe("War Axe", 10,15);
+    IWeapon bow = new Bow("War Bow", 10,15);
+    IWeapon staff = new Staff("War Staff", 10,15,15);
+    IWeapon sword = new Sword("War Sword", 10,15);
+    IWeapon knife = new Knife("War Knife", 10,15);
 
-    assertEquals(WeaponType.NULLWEAPON,blackMage.getEquippedWeapon().getType());
+
+    assertEquals(new Hand(),blackMage.getEquippedWeapon());
     blackMage.equip(testWeapon);
-    assertEquals(WeaponType.NULLWEAPON,whiteMage.getEquippedWeapon().getType());
+    assertEquals(new Hand(),whiteMage.getEquippedWeapon());
     whiteMage.equip(testWeapon);
-    assertEquals(WeaponType.NULLWEAPON,engineer.getEquippedWeapon().getType());
+    assertEquals(new Hand(),engineer.getEquippedWeapon());
     engineer.equip(testWeapon);
-    assertEquals(WeaponType.NULLWEAPON,knight.getEquippedWeapon().getType());
+    assertEquals(new Hand(),knight.getEquippedWeapon());
     knight.equip(testWeapon);
-    assertEquals(WeaponType.NULLWEAPON,thief.getEquippedWeapon().getType());
+    assertEquals(new Hand(),thief.getEquippedWeapon());
     thief.equip(testWeapon);
 
     blackMage.equip(axe);
@@ -235,8 +242,8 @@ class PlayerCharacterTest{
 
   @Test
   public void attackTest(){
-    PlayerCharacter player = testCharacters.get(0);
-    Enemy enemy = new Enemy("Enemy", 10, turns, LIFE, DEFENSE, 10);
+    IPlayerCharacter player = testCharacters.get(0);
+    Enemy enemy = new Enemy("Enemy", turns, LIFE, DEFENSE, 10, 10);
     assertEquals(LIFE, player.getLifePoints());
     Integer expLifePoints = player.getLifePoints() - (enemy.getDamage() - player.getDefense());
     enemy.attack(player);
@@ -245,14 +252,14 @@ class PlayerCharacterTest{
 
   @Test
   public void aliveTest() {
-    PlayerCharacter player = testCharacters.get(0);
-    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+    IPlayerCharacter player = testCharacters.get(0);
+    Enemy enemy = new Enemy("Goblin's God", turns, LIFE, DEFENSE, 2000, 10);
     assertTrue(player.alive());
     enemy.attack(player);
     assertFalse(player.alive());
 
-    PlayerCharacter player2 = testCharacters.get(1);
-    Enemy enemy2 = new Enemy("Slime", 10, turns , LIFE , DEFENSE, 0);
+    IPlayerCharacter player2 = testCharacters.get(1);
+    Enemy enemy2 = new Enemy("Slime", turns, LIFE, DEFENSE, 0, 10);
     assertTrue(player2.alive());
     enemy2.attack(player2);
     assertTrue(player2.alive());
@@ -260,9 +267,9 @@ class PlayerCharacterTest{
 
   @Test
   public void aliveAttackTest() {
-    PlayerCharacter player = testCharacters.get(0);
-    PlayerCharacter player2 = testCharacters.get(1);
-    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+    IPlayerCharacter player = testCharacters.get(0);
+    IPlayerCharacter player2 = testCharacters.get(1);
+    Enemy enemy = new Enemy("Goblin's God", turns, LIFE, DEFENSE, 2000, 10);
     Axe axe = new Axe("Dicky's axe", 100 , 10);
     player.equip(axe);
     player2.equip(axe);
@@ -290,9 +297,9 @@ class PlayerCharacterTest{
     BlackMage blackWizard = blackMage;
     BlackMage blackWizard2 = new BlackMage(WHITE_MAGE_NAME,turns,LIFE,DEFENSE,MANA);
 
-    Enemy enemy = new Enemy("Goblin's God", 10, turns , LIFE , DEFENSE, 2000);
+    Enemy enemy = new Enemy("Goblin's God", turns, LIFE, DEFENSE, 2000, 10);
 
-    Weapon defaultWeapon = new Weapon("NULL",0,-1, WeaponType.NULLWEAPON);
+    IWeapon defaultWeapon = new Hand();
     Axe testAxe = new Axe("Dicky's axe", 100 , 10);
     Sword testSword = new Sword("Dicky's sword", 100 , 10);
     Knife testKnife = new Knife("Dicky's knife", 100 , 10);

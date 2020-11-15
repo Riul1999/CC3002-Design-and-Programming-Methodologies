@@ -79,20 +79,20 @@ class WeaponTest {
     assertNotEquals(testAxe, new Axe("War Axe",DAMAGE,SPEED));
     assertNotEquals(testAxe, new Axe(AXE_NAME,DAMAGE+1,SPEED));
     assertNotEquals(testAxe, new Axe(AXE_NAME,DAMAGE,SPEED+1));
-    assertNotEquals(testAxe,new Weapon(AXE_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON));
+    assertNotEquals(testAxe,new Sword(AXE_NAME,DAMAGE,SPEED));
     assertNotEquals(testAxe.hashCode(), new Axe("War Axe",DAMAGE,SPEED).hashCode());
     assertNotEquals(testAxe .hashCode(), new Axe(AXE_NAME,DAMAGE+1,SPEED).hashCode());
     assertNotEquals(testAxe.hashCode(), new Axe(AXE_NAME,DAMAGE,SPEED+1).hashCode());
-    assertNotEquals(testAxe.hashCode(),new Weapon(AXE_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON).hashCode());
+    assertNotEquals(testAxe.hashCode(),new Sword(AXE_NAME,DAMAGE,SPEED).hashCode());
 
     assertNotEquals(testBow, new Bow("War Bow",DAMAGE,SPEED));
     assertNotEquals(testBow, new Bow(BOW_NAME,DAMAGE+1,SPEED));
     assertNotEquals(testBow, new Bow(BOW_NAME,DAMAGE,SPEED+1));
-    assertNotEquals(testBow,new Weapon(BOW_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON));
+    assertNotEquals(testBow,new Sword(BOW_NAME,DAMAGE,SPEED));
     assertNotEquals(testBow.hashCode(), new Bow("War Bow",DAMAGE,SPEED).hashCode());
     assertNotEquals(testBow.hashCode(), new Bow(BOW_NAME,DAMAGE+1,SPEED).hashCode());
     assertNotEquals(testBow.hashCode(), new Bow(BOW_NAME,DAMAGE,SPEED+1).hashCode());
-    assertNotEquals(testBow.hashCode(),new Weapon(BOW_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON).hashCode());
+    assertNotEquals(testBow.hashCode(),new Sword(BOW_NAME,DAMAGE,SPEED).hashCode());
 
     assertNotEquals(testStaff, new Staff("War Staff",DAMAGE,SPEED,MAGIC_DAMAGE));
     assertNotEquals(testStaff, new Staff(STAFF_NAME,DAMAGE+1,SPEED,MAGIC_DAMAGE));
@@ -106,19 +106,19 @@ class WeaponTest {
     assertNotEquals(testSword, new Sword("War Sword",DAMAGE,SPEED));
     assertNotEquals(testSword, new Sword(SWORD_NAME,DAMAGE+1,SPEED));
     assertNotEquals(testSword, new Sword(SWORD_NAME,DAMAGE,SPEED+1));
-    assertNotEquals(testSword,new Weapon(SWORD_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON));
+    assertNotEquals(testSword,new Knife(SWORD_NAME,DAMAGE,SPEED));
     assertNotEquals(testSword.hashCode(), new Sword("War Sword",DAMAGE,SPEED).hashCode());
     assertNotEquals(testSword.hashCode(), new Sword(SWORD_NAME,DAMAGE+1,SPEED).hashCode());
     assertNotEquals(testSword.hashCode(), new Sword(SWORD_NAME,DAMAGE,SPEED+1).hashCode());
-    assertNotEquals(testSword.hashCode(),new Weapon(SWORD_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON).hashCode());
+    assertNotEquals(testSword.hashCode(),new Knife(SWORD_NAME,DAMAGE,SPEED).hashCode());
 
     assertNotEquals(testKnife, new Knife("War Knife",DAMAGE,SPEED));
     assertNotEquals(testKnife, new Knife(KNIFE_NAME,DAMAGE+1,SPEED));
     assertNotEquals(testKnife, new Knife(KNIFE_NAME,DAMAGE,SPEED+1));
-    assertNotEquals(testKnife,new Weapon(KNIFE_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON));
+    assertNotEquals(testKnife,new Sword(KNIFE_NAME,DAMAGE,SPEED));
     assertNotEquals(testKnife.hashCode(), new Knife("War Knife",DAMAGE,SPEED).hashCode());
     assertNotEquals(testKnife.hashCode(), new Knife(KNIFE_NAME,DAMAGE+1,SPEED).hashCode());
     assertNotEquals(testKnife.hashCode(), new Knife(KNIFE_NAME,DAMAGE,SPEED+1).hashCode());
-    assertNotEquals(testKnife.hashCode(),new Weapon(KNIFE_NAME,DAMAGE,SPEED,WeaponType.NULLWEAPON).hashCode());
+    assertNotEquals(testKnife.hashCode(),new Sword(KNIFE_NAME,DAMAGE,SPEED).hashCode());
   }
 }

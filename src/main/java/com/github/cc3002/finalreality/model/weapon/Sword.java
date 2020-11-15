@@ -1,6 +1,9 @@
 package com.github.cc3002.finalreality.model.weapon;
 
-import com.github.cc3002.finalreality.model.character.player.*;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+
+import java.util.Objects;
 
 /**
  * A class that holds all the information of a sword.
@@ -8,7 +11,7 @@ import com.github.cc3002.finalreality.model.character.player.*;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class Sword extends Weapon{
+public class Sword extends AbstractWeapon {
 
     /**
      * Creates a sword with a name, a base damage and it's weight.
@@ -22,7 +25,17 @@ public class Sword extends Weapon{
      *
      */
     public Sword(final String name, final int damage, final int weight) {
-        super(name,damage,weight,WeaponType.SWORD);
+        super(name,damage,weight);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ( o instanceof Sword && super.equals(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), Sword.class);
     }
 
     @Override

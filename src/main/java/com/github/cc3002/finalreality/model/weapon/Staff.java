@@ -1,6 +1,8 @@
 package com.github.cc3002.finalreality.model.weapon;
 
-import com.github.cc3002.finalreality.model.character.player.*;
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.BlackMage;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.WhiteMage;
 
 import java.util.Objects;
 
@@ -10,7 +12,7 @@ import java.util.Objects;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class Staff extends Weapon{
+public class Staff extends AbstractWeapon {
 
     private final Integer magicDamage;
 
@@ -29,7 +31,7 @@ public class Staff extends Weapon{
      */
     public Staff(final String name, final int damage, final int weight, final Integer magicDamage) {
 
-        super(name,damage,weight,WeaponType.STAFF);
+        super(name,damage,weight);
         this.magicDamage=magicDamage;
     }
 
@@ -37,22 +39,16 @@ public class Staff extends Weapon{
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
         if (!(o instanceof Staff)) {
             return false;
         }
         final Staff weaponStaff = (Staff) o;
-        return getDamage() == weaponStaff.getDamage() &&
-                getWeight() == weaponStaff.getWeight() &&
-                getName().equals(weaponStaff.getName()) &&
-                getMagicDamage().equals(weaponStaff.getMagicDamage());
+        return getMagicDamage().equals(weaponStaff.getMagicDamage()) && super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDamage(), getWeight(), getMagicDamage());
+        return Objects.hash(super.hashCode(), getMagicDamage(), Staff.class);
     }
 
     @Override

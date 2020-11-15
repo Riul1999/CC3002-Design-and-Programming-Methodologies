@@ -1,7 +1,6 @@
 package com.github.cc3002.finalreality.model.character;
 
-import com.github.cc3002.finalreality.model.character.player.CharacterClass;
-
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -17,7 +16,6 @@ public abstract class AbstractCharacter implements ICharacter {
 
   protected final BlockingQueue<ICharacter> turnsQueue;
   protected final String name;
-  private final CharacterClass characterClass;
   protected ScheduledExecutorService scheduledExecutor;
   protected Integer lifePoints;
   protected Integer defense;
@@ -25,13 +23,11 @@ public abstract class AbstractCharacter implements ICharacter {
 
   protected AbstractCharacter(@NotNull BlockingQueue<ICharacter> turnsQueue,
                               @NotNull String name,
-                              CharacterClass characterClass,
                               @NotNull Integer lifePoints,
                               Integer defense,
                               Integer damage) {
     this.turnsQueue = turnsQueue;
     this.name = name;
-    this.characterClass = characterClass;
     this.lifePoints = lifePoints;
     this.defense = defense;
     this.damage = damage;
@@ -67,11 +63,6 @@ public abstract class AbstractCharacter implements ICharacter {
   }
 
   @Override
-  public CharacterClass getCharacterClass() {
-    return characterClass;
-  }
-
-  @Override
   public Integer getLifePoints() { return lifePoints;}
 
   @Override
@@ -79,4 +70,24 @@ public abstract class AbstractCharacter implements ICharacter {
 
   @Override
   public abstract Integer getDamage();
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if ( !(o instanceof AbstractCharacter)){
+      return false;
+    }
+    final AbstractCharacter that = (AbstractCharacter) o;
+    return     getName().equals(that.getName())
+            && getLifePoints().equals((that.getLifePoints()))
+            && getDefense().equals(that.getDefense())
+            && getDamage().equals(that.getDamage());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash( getName(), getLifePoints(), getDefense(), getDamage() , AbstractCharacter.class );
+  }
 }
