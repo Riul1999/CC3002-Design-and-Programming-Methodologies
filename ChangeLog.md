@@ -1,6 +1,35 @@
 ChangeLog
 =========
 
+Version 5.0
+-----------
+- (B.26) Se corren todos los test y se logra un 97% de lineas y 90% de branches (no se puede lograr 100% por las clases abstractas)
+- (B.25) Se crean paquetes commonCharacter y magicCharacter en el paquete player para ordenar el proyecto
+- (B.24) Creacion de las interfaces ICommonCharacter e IMagicCharacter que extienden IPlayerCharacter
+- (B.23) Modificacion de la clase PlayerCharacter, se transforma en clase abstracta y se nombra AbstractPlayerCharacter
+- (B.22) Cambio de AbstractWeapon por IWeapon en todo el proyecto, se revisan todas las clases
+- (B.21) Creacion Interfaz IPlayerCharacter que extiende ICharacter (para no tener problemas de tipo)
+- (B.20) Implementacion de checkeo de arma en el metodo checkConstruction
+- (B.19) Se checkean todos los test de la clase PlayerCharacterTest
+- (B.18) Se implementa en la clase PlayerCharacter la incializacion de equippedWeapon como una Hand
+- (B.17) Se crea constructor que no recibe parametros, todas las Hands son iguales
+- (B.16) Se crea la clase Hand, para darle esta arma a los PlayerCharacter al momento de crearlos (arma por defecto)
+- (B.15) Se cambia los tipos de los parametros y metodos de la clase de int a Integer
+- (B.14) Modificacion de la clase Weapon, se cambia a clase abstracta con nombre AbstractWeapon
+- (B.13) Se Crea interfaz IWeapon para agrupar las Weapons, se enuncian los metodos de Weapon en ella
+- (B.12) Se modifican metodos equals y hashCode en las subclases y se implementa herencia en los metodos 
+- (B.11) Se modifican metodos equals y hashCode para tomar en cuenta la clase Weapon y el getClass
+- (B.10) Se elimina parametro type y metodo getClass de Weapon
+- (B.9) Refactor constructor Weapon para no requerir que se ingrese el parametro type
+- (B.8) Se elimina enumeracion WeaponType
+- (B.7) Se corren los test waiTurn y checkConstruction y salen aprobados
+- (B.6) Se implementan los test aprovechando la herencia en dichas clases
+- (B.5) Se hace que las clases EnemyTest y PlayerCharacterTest extiendan esta clase
+- (B.4) Se implementan los metodos AbstractCharacterCheckConstruction, WaitTurn y BasicSetUp
+- (B.3) Creacion clase AbstractCharacterTest para poder agrupar funcionalidades de los test
+- (B.2) Modificacion de los metodos equals y hashCode para agregar CLASE.class y se ocupa herencia en el metodo
+- (B.1) Eliminacion de enumeracion para los Character, eliminacion del metodo getClass y modificacion de los constructores de las clases
+
 Version 4.0
 -----------
 - (RC.1) Nuevas funcionaliades implementadas y se asegura 100% de lineas y branches cubiertas

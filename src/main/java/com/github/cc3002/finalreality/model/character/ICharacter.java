@@ -1,7 +1,5 @@
 package com.github.cc3002.finalreality.model.character;
 
-import com.github.cc3002.finalreality.model.character.player.CharacterClass;
-
 /**
  * This represents a character from the game.
  * A character can be controlled by the player or by the CPU (an enemy).
@@ -22,10 +20,6 @@ public interface ICharacter {
    */
   String getName();
 
-  /**
-   * Returns this character's class.
-   */
-  CharacterClass getCharacterClass();
 
   /**
    * Returns this character's life points

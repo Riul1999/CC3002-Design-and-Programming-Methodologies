@@ -1,6 +1,7 @@
-package com.github.cc3002.finalreality.model.character.player;
+package com.github.cc3002.finalreality.model.character.player.magicCharacter;
 
 import com.github.cc3002.finalreality.model.character.ICharacter;
+import com.github.cc3002.finalreality.model.character.player.AbstractPlayerCharacter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public abstract class AbstractMagicCharacter extends PlayerCharacter{
+public abstract class AbstractMagicCharacter extends AbstractPlayerCharacter implements IMagicCharacter {
 
     protected Integer currentMana;
     protected Integer maxMana;
@@ -23,8 +24,6 @@ public abstract class AbstractMagicCharacter extends PlayerCharacter{
      *      the magic character's name
      * @param turnsQueue
      *      the queue with the characters waiting for their turn
-     * @param characterClass
-     *      the class of this character
      * @param lifePoints
      *      the magic character's life points
      * @param defense
@@ -33,42 +32,31 @@ public abstract class AbstractMagicCharacter extends PlayerCharacter{
      *      the maximum mana of the magic character
      *
      */
-    public AbstractMagicCharacter(@NotNull String name,
+    public AbstractMagicCharacter (@NotNull String name,
                                   @NotNull BlockingQueue<ICharacter> turnsQueue,
-                                  final CharacterClass characterClass,
                                   @NotNull Integer lifePoints,
                                   Integer defense,
                                   @NotNull Integer maxMana) {
-        super(name, turnsQueue, characterClass,lifePoints,defense);
+        super(name, turnsQueue,lifePoints,defense);
         this.maxMana = maxMana;
         this.currentMana = maxMana;
     }
 
-    /**
-     * Returns this character's maximum mana.
-     */
+    @Override
     public Integer getMaxMana() { return maxMana;}
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(),getCharacterClass(),
-                getLifePoints(),getDefense(),getMaxMana());
+        return Objects.hash(super.hashCode(),getMaxMana(),AbstractMagicCharacter.class);
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AbstractMagicCharacter)) {
+        if (!(o instanceof  AbstractMagicCharacter)) {
             return false;
         }
-        final AbstractMagicCharacter that = (AbstractMagicCharacter) o;
-        return     getCharacterClass() == that.getCharacterClass()
-                && getName().equals(that.getName())
-                && getLifePoints().equals((that.getLifePoints()))
-                && getDefense().equals(that.getDefense())
-                && getMaxMana().equals(that.getMaxMana());
+        AbstractMagicCharacter mage = (AbstractMagicCharacter) o;
+        return  getMaxMana().equals(mage.getMaxMana()) && super.equals(o);
     }
 }

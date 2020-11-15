@@ -1,6 +1,9 @@
 package com.github.cc3002.finalreality.model.weapon;
 
-import com.github.cc3002.finalreality.model.character.player.*;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Engineer;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
+
+import java.util.Objects;
 
 /**
  * A class that holds all the information of an axe.
@@ -8,7 +11,7 @@ import com.github.cc3002.finalreality.model.character.player.*;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class Axe extends Weapon{
+public class Axe extends AbstractWeapon {
 
     /**
      * Creates an axe with a name, a base damage and it's weight.
@@ -22,7 +25,17 @@ public class Axe extends Weapon{
      *
      */
     public Axe(final String name, final int damage, final int weight) {
-        super(name,damage,weight,WeaponType.AXE);
+        super(name,damage,weight);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Axe && super.equals(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), Axe.class);
     }
 
     @Override

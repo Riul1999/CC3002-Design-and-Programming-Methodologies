@@ -1,9 +1,10 @@
-package com.github.cc3002.finalreality.model.character.player;
+package com.github.cc3002.finalreality.model.character.player.magicCharacter;
 
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.weapon.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -12,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
-public class BlackMage extends AbstractMagicCharacter{
+public class BlackMage extends AbstractMagicCharacter {
 
     /**
      *
@@ -32,11 +33,21 @@ public class BlackMage extends AbstractMagicCharacter{
                      @NotNull Integer lifePoints,
                      Integer defense,
                      @NotNull Integer maxMana) {
-        super(name, turnsQueue, CharacterClass.BLACK_MAGE,lifePoints,defense,maxMana);
+        super(name, turnsQueue, lifePoints,defense,maxMana);
     }
 
     @Override
-    public void equip(Weapon weapon) {
+    public void equip(IWeapon weapon) {
         if (this.alive()) weapon.equipToBlackMage(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ( o instanceof BlackMage && super.equals(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( super.hashCode() , BlackMage.class );
     }
 }
