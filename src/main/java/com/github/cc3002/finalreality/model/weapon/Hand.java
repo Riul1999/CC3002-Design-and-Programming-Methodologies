@@ -28,4 +28,9 @@ public class Hand extends AbstractWeapon{
         return Objects.hash(super.hashCode(), Hand.class);
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Hand";
+    }
 }

@@ -2,6 +2,7 @@ package com.github.cc3002.finalreality.model.character.player;
 
 import com.github.cc3002.finalreality.model.character.AbstractCharacter;
 import com.github.cc3002.finalreality.model.character.ICharacter;
+
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -11,7 +12,7 @@ import com.github.cc3002.finalreality.model.weapon.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A class that holds all the information of a single character of the game.
+ * A class that holds all the information of a single player character of the game.
  *
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
@@ -88,4 +89,11 @@ public abstract class AbstractPlayerCharacter extends AbstractCharacter implemen
     AbstractPlayerCharacter that = (AbstractPlayerCharacter) o;
     return Objects.equals(getEquippedWeapon(), that.getEquippedWeapon()) && super.equals(o);
   }
+
+  @Override
+  public String toString() {
+    return super.toString() +
+            ",[Weapon: "+getEquippedWeapon()+"]";
+  }
+
 }

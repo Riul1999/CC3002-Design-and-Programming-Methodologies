@@ -59,4 +59,10 @@ public abstract class AbstractMagicCharacter extends AbstractPlayerCharacter imp
         AbstractMagicCharacter mage = (AbstractMagicCharacter) o;
         return  getMaxMana().equals(mage.getMaxMana()) && super.equals(o);
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",MaxMana: " + getMaxMana();
+    }
 }

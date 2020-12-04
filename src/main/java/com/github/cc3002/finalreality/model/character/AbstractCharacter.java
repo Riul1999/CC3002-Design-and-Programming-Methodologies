@@ -1,9 +1,14 @@
 package com.github.cc3002.finalreality.model.character;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
+import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveAbstractCharacterHandler;
+import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
+import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,6 +25,9 @@ public abstract class AbstractCharacter implements ICharacter {
   protected Integer lifePoints;
   protected Integer defense;
   protected Integer damage;
+  private final PropertyChangeSupport aliveChange;
+  private final PropertyChangeSupport endTurnChange;
+  private final PropertyChangeSupport beginTurnChange;
 
   protected AbstractCharacter(@NotNull BlockingQueue<ICharacter> turnsQueue,
                               @NotNull String name,
@@ -31,6 +39,9 @@ public abstract class AbstractCharacter implements ICharacter {
     this.lifePoints = lifePoints;
     this.defense = defense;
     this.damage = damage;
+    aliveChange = new PropertyChangeSupport(this);
+    endTurnChange = new PropertyChangeSupport(this);
+    beginTurnChange = new PropertyChangeSupport(this);
   }
 
   @Override
@@ -46,12 +57,20 @@ public abstract class AbstractCharacter implements ICharacter {
 
   @Override
   public void attack(ICharacter iCharacter) {
-    if (this.alive()) iCharacter.receiveDamage(this.getDamage());
+    if (this.alive()) {
+      iCharacter.receiveDamage(this.getDamage());
+    }
   }
 
   @Override
   public void receiveDamage(Integer damage) {
     this.lifePoints -= (damage - this.defense);
+    if (lifePoints < 0) {
+      aliveChange.firePropertyChange(new PropertyChangeEvent(this, "entered text", null, this));
+    }
+    endTurnChange.firePropertyChange(new PropertyChangeEvent(this,"entered text",null,null));
+    beginTurnChange.firePropertyChange(new PropertyChangeEvent(this,"entered text",null,null));
+
   }
 
   @Override
@@ -89,5 +108,36 @@ public abstract class AbstractCharacter implements ICharacter {
   @Override
   public int hashCode() {
     return Objects.hash( getName(), getLifePoints(), getDefense(), getDamage() , AbstractCharacter.class );
+  }
+
+  @Override
+  public String toString() {
+    return "Name: "+getName()+
+            ",LifePoints: "+getLifePoints()+
+            ",Defense: "+getDefense();
+  }
+
+  /**
+   * This method associates this AbstractCharacter whit the AliveAbstractCharacterHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  public void addAliveListener(AliveAbstractCharacterHandler res) {
+    aliveChange.addPropertyChangeListener(res);
+  }
+
+  /**
+   * This method associates this AbstractCharacter whit the EndTurnHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  public void addEndTurnListener(EndTurnHandler res){
+    endTurnChange.addPropertyChangeListener(res);
+  }
+
+  /**
+   * This method associates this AbstractCharacter whit the StartTurnHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  public void addBeginTurnListener(BeginTurnHandler res) {
+    beginTurnChange.addPropertyChangeListener(res);
   }
 }

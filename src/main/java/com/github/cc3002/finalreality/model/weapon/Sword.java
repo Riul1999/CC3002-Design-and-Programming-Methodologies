@@ -48,4 +48,9 @@ public class Sword extends AbstractWeapon {
         character.equipSword(this);
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Sword";
+    }
 }

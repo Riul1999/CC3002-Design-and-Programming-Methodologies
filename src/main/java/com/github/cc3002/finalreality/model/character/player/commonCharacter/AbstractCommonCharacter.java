@@ -42,4 +42,5 @@ public abstract class AbstractCommonCharacter extends AbstractPlayerCharacter im
     public int hashCode() {
         return Objects.hash( super.hashCode() , AbstractCommonCharacter.class );
     }
+
 }

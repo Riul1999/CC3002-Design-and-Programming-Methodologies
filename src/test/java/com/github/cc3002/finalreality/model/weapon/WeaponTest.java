@@ -121,4 +121,23 @@ class WeaponTest {
     assertNotEquals(testKnife.hashCode(), new Knife(KNIFE_NAME,DAMAGE,SPEED+1).hashCode());
     assertNotEquals(testKnife.hashCode(),new Sword(KNIFE_NAME,DAMAGE,SPEED).hashCode());
   }
+
+  /**
+   * Checks that the class toString method works properly.
+   */
+  @Test
+  public void toStringTest(){
+
+    String expectedAxe = "Name: Test Axe,Damage: 15,Weight: 10,Class: Axe";
+    String expectedBow = "Name: Test Bow,Damage: 15,Weight: 10,Class: Bow";
+    String expectedKnife = "Name: Test Knife,Damage: 15,Weight: 10,Class: Knife";
+    String expectedSword = "Name: Test Sword,Damage: 15,Weight: 10,Class: Sword";
+    String expectedStaff = "Name: Test Staff,Damage: 15,Weight: 10,MagicDamage: 25,Class: Staff";
+
+    assertEquals(expectedAxe,testAxe.toString());
+    assertEquals(expectedBow,testBow.toString());
+    assertEquals(expectedKnife,testKnife.toString());
+    assertEquals(expectedSword,testSword.toString());
+    assertEquals(expectedStaff,testStaff.toString());
+  }
 }

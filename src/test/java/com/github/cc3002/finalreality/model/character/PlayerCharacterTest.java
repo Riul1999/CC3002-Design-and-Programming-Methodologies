@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Set of tests for the {@code GameCharacter} class.
+ * Set of tests for the IPlayerCharacter class.
  *
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
@@ -408,5 +408,23 @@ class PlayerCharacterTest extends AbstractCharacterTest{
     blackWizard.equip(testStaff);
     assertEquals(testStaff,blackWizard.getEquippedWeapon());
 
+  }
+
+  /**
+   * Checks that the class toString method works properly.
+   */
+  @Test
+  public void toStringTest() {
+    String expectedEngineer = "Name: Cid,LifePoints: 1000,Defense: 30,[Weapon: Name: Hand,Damage: 1,Weight: 10,Class: Hand],Class: Engineer";
+    String expectedKnight = "Name: Adelbert,LifePoints: 1000,Defense: 30,[Weapon: Name: Hand,Damage: 1,Weight: 10,Class: Hand],Class: Knight";
+    String expectedThief = "Name: Zidane,LifePoints: 1000,Defense: 30,[Weapon: Name: Hand,Damage: 1,Weight: 10,Class: Hand],Class: Thief";
+    String expectedWhiteMage = "Name: Eiko,LifePoints: 1000,Defense: 30,[Weapon: Name: Hand,Damage: 1,Weight: 10,Class: Hand],MaxMana: 200,Class: WhiteMage";
+    String expectedBlackMage = "Name: Vivi,LifePoints: 1000,Defense: 30,[Weapon: Name: Hand,Damage: 1,Weight: 10,Class: Hand],MaxMana: 200,Class: BlackMage";
+
+    assertEquals(expectedEngineer,testCharacters.get(0).toString());
+    assertEquals(expectedKnight,testCharacters.get(1).toString());
+    assertEquals(expectedThief,testCharacters.get(2).toString());
+    assertEquals(expectedWhiteMage,whiteMage.toString());
+    assertEquals(expectedBlackMage,blackMage.toString());
   }
 }

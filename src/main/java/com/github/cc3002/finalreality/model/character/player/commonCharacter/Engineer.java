@@ -48,4 +48,10 @@ public class Engineer extends AbstractCommonCharacter {
     public int hashCode() {
         return Objects.hash( super.hashCode() , Engineer.class );
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Engineer";
+    }
 }

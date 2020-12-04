@@ -1,13 +1,20 @@
 package com.github.cc3002.finalreality.model.character;
 
+import com.github.cc3002.finalreality.model.character.player.AbstractPlayerCharacter;
 import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
 import com.github.cc3002.finalreality.model.weapon.Axe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Set of tests for the Enemy class.
+ *
+ * @author Ignacio Slater Muñoz.
+ * @author Rodrigo Urrea Loyola
+ * @see AbstractPlayerCharacter
+ */
 class EnemyTest extends  AbstractCharacterTest{
 
   private static final String ENEMY_NAME = "Goblin";
@@ -132,5 +139,14 @@ class EnemyTest extends  AbstractCharacterTest{
     assertEquals(LIFE,player.getLifePoints());
     enemy.attack(player);
     assertNotEquals(LIFE,player.getLifePoints());
+  }
+
+  /**
+   * Checks that the class toString method works properly.
+   */
+  @Test
+  public void toStringTest(){
+    String expectedEnemy = "Name: Goblin,LifePoints: 1000,Defense: 30,Damage: 16,Weight: 10,Class: Enemy";
+    assertEquals(expectedEnemy,testCharacters.toString());
   }
 }

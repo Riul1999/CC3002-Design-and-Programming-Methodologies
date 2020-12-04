@@ -65,4 +65,11 @@ public class Staff extends AbstractWeapon {
     public void equipToWhiteMage(WhiteMage character){
         character.equipStaff(this);
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",MagicDamage: "+getMagicDamage()+
+                ",Class: Staff";
+    }
 }

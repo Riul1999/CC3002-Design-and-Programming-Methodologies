@@ -47,4 +47,10 @@ public class Knight extends AbstractCommonCharacter {
     public int hashCode() {
         return Objects.hash( super.hashCode() , Knight.class );
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Knight";
+    }
 }

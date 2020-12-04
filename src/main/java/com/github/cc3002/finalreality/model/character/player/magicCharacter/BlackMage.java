@@ -26,7 +26,7 @@ public class BlackMage extends AbstractMagicCharacter {
      * @param defense
      *      the black mage's defense
      * @param maxMana
-     *      the black mage's maximun mana
+     *      the black mage's maximum mana
      */
     public BlackMage(@NotNull String name,
                      @NotNull BlockingQueue<ICharacter> turnsQueue,
@@ -49,5 +49,11 @@ public class BlackMage extends AbstractMagicCharacter {
     @Override
     public int hashCode() {
         return Objects.hash( super.hashCode() , BlackMage.class );
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: BlackMage";
     }
 }
