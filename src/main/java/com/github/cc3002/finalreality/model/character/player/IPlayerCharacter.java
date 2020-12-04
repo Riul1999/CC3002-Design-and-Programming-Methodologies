@@ -3,6 +3,12 @@ package com.github.cc3002.finalreality.model.character.player;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.weapon.*;
 
+/**
+ * This represents a character from the game, controlled by the player.
+ *
+ * @author Ignacio Slater Muñoz.
+ * @author Rodrigo Urrea Loyola
+ */
 public interface IPlayerCharacter extends ICharacter {
 
     /**

@@ -48,4 +48,9 @@ public class Knife extends AbstractWeapon {
         character.equipKnife(this);
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Knife";
+    }
 }

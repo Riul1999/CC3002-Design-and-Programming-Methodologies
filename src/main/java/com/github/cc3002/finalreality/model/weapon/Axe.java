@@ -47,4 +47,10 @@ public class Axe extends AbstractWeapon {
     public void equipToKnight(Knight character){
         character.equipAxe(this);
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                ",Class: Axe";
+    }
 }

@@ -79,4 +79,11 @@ public abstract class AbstractWeapon implements IWeapon{
 
   @Override
   public void equipToWhiteMage(WhiteMage character){}
+
+  @Override
+  public String toString() {
+    return "Name: "+getName()+
+           ",Damage: "+getDamage()+
+           ",Weight: "+getWeight();
+  }
 }

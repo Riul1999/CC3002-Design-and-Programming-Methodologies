@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation(group = "org.openjfx", name = "javafx", version = "14-ea+6", ext = "pom")
     implementation("org.jetbrains:annotations:19.0.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.4.2")
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api",
             version = "5.1.0")
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine",
