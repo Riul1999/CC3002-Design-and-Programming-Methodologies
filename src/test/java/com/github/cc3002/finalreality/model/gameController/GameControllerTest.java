@@ -4,12 +4,16 @@ import com.github.cc3002.finalreality.gui.gameController.GameController;
 import com.github.cc3002.finalreality.model.character.Enemy;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.character.player.IPlayerCharacter;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Engineer;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.BlackMage;
 import com.github.cc3002.finalreality.model.character.player.magicCharacter.WhiteMage;
-import com.github.cc3002.finalreality.model.weapon.Axe;
-import com.github.cc3002.finalreality.model.weapon.IWeapon;
-import com.github.cc3002.finalreality.model.weapon.Sword;
+import com.github.cc3002.finalreality.model.weapon.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,8 +31,17 @@ public class GameControllerTest {
      * Do a basic SetUp for all the tests
      */
     @BeforeEach
-    public void setUp(){
-        testGame = new GameController();
+    public void setUp() throws IOException {
+        String testKnight = "Knight;King arthur;1000;80\n";
+        String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
+        String testGoblin = "Enemy;goblin;150;10;30;5\n";
+        String testArcherGoblin = "Enemy;Archer goblin;90;10;75;10\n";
+        String testGoblinChampion = "Enemy;Goblin Champion;1500;100;90;30\n";
+        String testSword = "Sword;Excalibur;120;15\n";
+        String testAxe = "Axe;Titanic Hydra;200;40\n";
+        String testStaff = "Staff;Chitauri;15;25;200\n";
+        String input = testKnight+testGoblin+testWhiteMage+testArcherGoblin+testGoblinChampion+testSword+testAxe+testStaff+"\n";
+        testGame = new GameController(input);
     }
 
     /**
@@ -42,6 +55,36 @@ public class GameControllerTest {
         assertFalse(testGame.getPlayerWinner());
     }
 
+    /**
+     * Checks the correct beavior of the initializeGame method.
+     */
+    @Test
+    public void checkInitializeGame() throws IOException {
+        String testKnight = "Knight;King arthur;1000;80\n";
+        String testEngineer = "Engineer;beauchef's engineer;200;30\n";
+        String testThief = "Thief;Bank Thief;100;10\n";
+        String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
+        String testBlackMage = "BlackMage;DarkMerlin;600;35;400\n";
+        String testGoblin = "Enemy;goblin;150;10;30;5\n";
+        String testAxe = "Axe;Titanic Hydra;200;40\n";
+        String testBow = "Bow;Ashe's bow;200;10\n";
+        String testKnife = "Knife;Chef's Knife;50;15\n";
+        String testSword = "Sword;Excalibur;120;15\n";
+        String testStaff = "Staff;Chitauri;15;25;200\n";
+        String input = testKnight+testEngineer+testThief+testWhiteMage+testBlackMage+testGoblin+testAxe+testBow+testKnife+testSword+testStaff+"\n";
+        GameController newGame = new GameController(input);
+        assertEquals(new Knight("King arthur", newGame.getTURNS(), 1000,80),newGame.getPlayer(0));
+        assertEquals(new Engineer("beauchef's engineer", newGame.getTURNS(), 200,30),newGame.getPlayer(1));
+        assertEquals(new Thief("Bank Thief", newGame.getTURNS(), 100,10),newGame.getPlayer(2));
+        assertEquals(new WhiteMage("Merlin", newGame.getTURNS(), 600,35,400),newGame.getPlayer(3));
+        assertEquals(new BlackMage("DarkMerlin", newGame.getTURNS(), 600,35,400),newGame.getPlayer(4));
+        assertEquals(new Enemy("goblin", newGame.getTURNS(), 150,10,30,5),newGame.getEnemy(0));
+        assertEquals(new Axe("Titanic Hydra",200,40),newGame.getWeapon(0));
+        assertEquals(new Bow("Ashe's bow",200,10),newGame.getWeapon(1));
+        assertEquals(new Knife("Chef's Knife",50,15),newGame.getWeapon(2));
+        assertEquals(new Sword("Excalibur",120,15),newGame.getWeapon(3));
+        assertEquals(new Staff("Chitauri",15,25,200),newGame.getWeapon(4));
+    }
     /**
      * Checks the correct behavior of the method getPlayer
      */

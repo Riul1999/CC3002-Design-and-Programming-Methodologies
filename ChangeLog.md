@@ -2,18 +2,32 @@ ChangeLog
 =========
 Version 6.0
 -----------
-- (B.13) Se agrega el paramtro changues a la clase AbstractCharacter y se agrega el firePropertyChangue a los metodos recieveDamage y attack
-- (B.12) Se crean las clases AliveHandler, TurnBeginHandler y TurnFinishHandler para hacerle saber al GameController cuando ocurren estas situaciones
-- (B.11) Se transforman los metodos equipWeapon y charactersAttack a metodos estaticos pues no requieren de una instancia GameController ya que reciben los objetos
-- (B.10) tambien se cambian los metodos de get...Info a solo get...  y se modifcan dichos metodos para que devuelvan un objeto de la clase ...
+- (RC.2) Con esto se logran cubir los requisitos de la tarea 2
+- (B.25) Se corren los test y se asegura un 98% de lineas y 88% de branches
+- (B.24) Se implementa los test para esta ultima funcionalidad, ademas de adaptar el metodo setUp para que le de un string al constructor de GameController
+- (B.23) Se crean metodo de creacion para cada posible clase de personaje, enemigo y arma
+- (B.22) Se implementa el metodo createItem que dependiendo de la clase crea un objeto y lo añade al juego
+- (B.21) Se implementa un lector de personajes, enemigos y armas (initializeGame), lee lineas y separa la linea por ; , el primer string representa la clase del objeto a crear
+- (B.20) Se crea un nuevo constructor que recibe un String, el cual representa todos los personajes,enemigos y armas que tendra el juego
+- (B.19) Se modifica el constructor de GameController para que se puedan crear los personajes que se deseen y no sean por defecto
+- (RC.1) Se logra cubir los requisitos de la entrega parcial 5
+- (B.18) Se crean los test para gameController incluyendo test para los Handlers
+- (B.17) Se crean paquetes para ordenar las nuevas clases
+- (B.16) Cada uno de los handler al percibir la muerte de un character lo eliminan del juego y checkean si es que quedan mas de esos personajes, en caso de que no se termina el juego y se decide al ganador, dependiedo del tipo de personaje eliminado
+- (B.15) Se crea un AlivePlayerCharacterHandler y un AliveEnemyHandler, los dos heredan de AliveAbstractCharacterHandler y tienen un change en AbstractCharacter, se disparan cuando un character recive daño y muere
+- (B.14) Se crea el metodo estatico beginTurn que modifica la variable freeTurn a false, este metodo se ejecuta en BeginTurnHandler, solo si es que hay personajes en la cola TURNS
+- (B.13) Se crea el metodo estatico endTurn que modifica la variable freeTurn que indica si hay un personaje jugando o no, este metodo se ejecuta en EndTurnHandler
+- (B.12) Para BeginTurnHandler y EndTurnHandler se crean PropertyChangeSupport para cada uno, se agrega un firePropertyChange para ambos en receiveDamage (esto indica el fin del turno, y un turno comienza si otro termina)
+- (B.11) Se crean las clases AliveHandler, BeginTurnHandler y EndTurnHandler para hacerle saber al GameController cuando ocurren las situaciones descritas en el enunciado
+- (B.10) Tambien se cambian los metodos de get...Info a solo get...  y se modifcan dichos metodos para que devuelvan un objeto de la clase ...
 - (B.9) Se escriben las documentaciones de los nuevos metodos y se modifican los metodos equipWeapon y charactersAttack para que reciban personajes en vez de indices
 - (B.8) Se implementa el metodo charactersAttack en GameController para que uno de los personajes del jugador ataque o sea atacado por un enemigo
 - (B.7) Se implementa el metodo equipWeapon en GameController para equipar un arma del inventario a uno de los personajes del jugador
 - (B.6) Se implementan los metodos getPlayerInfo, getEnemyInfo, getWeaponInfo en GameController para obtener las informacion de dichos objetos
 - (B.5) Se corren los test y se logra 97% de lineas y 90% de branches
 - (B.4) Se implementa metodo toString en los personajes y las armas
-- (B.3) Se crean test para implementar la neuva funcionalidad toString de los peronsajes y las armas
-- (B.2) En el constructor se incializan arreglos de personajes, enemigos y armas, por el momento todas por defecto
+- (B.3) Se crean test para implementar la nueva funcionalidad toString de los peronsajes y las armas
+- (B.2) En el constructor se incializan arreglos de personajes, enemigos y armas, por el momento todas por defecto. Tambien se inicializa la cola TURNS
 - (B.1) Se implementa la clase GameController que se encargara del manejo de un juego
 
 Version 5.0
