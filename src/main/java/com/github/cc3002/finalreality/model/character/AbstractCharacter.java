@@ -117,26 +117,17 @@ public abstract class AbstractCharacter implements ICharacter {
             ",Defense: "+getDefense();
   }
 
-  /**
-   * This method associates this AbstractCharacter whit the AliveAbstractCharacterHandler res
-   * @param res an Listener who observes this AbstractCharacter
-   */
+  @Override
   public void addAliveListener(AliveAbstractCharacterHandler res) {
     aliveChange.addPropertyChangeListener(res);
   }
 
-  /**
-   * This method associates this AbstractCharacter whit the EndTurnHandler res
-   * @param res an Listener who observes this AbstractCharacter
-   */
+  @Override
   public void addEndTurnListener(EndTurnHandler res){
     endTurnChange.addPropertyChangeListener(res);
   }
 
-  /**
-   * This method associates this AbstractCharacter whit the StartTurnHandler res
-   * @param res an Listener who observes this AbstractCharacter
-   */
+  @Override
   public void addBeginTurnListener(BeginTurnHandler res) {
     beginTurnChange.addPropertyChangeListener(res);
   }

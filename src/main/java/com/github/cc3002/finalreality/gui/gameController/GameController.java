@@ -7,14 +7,17 @@ import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
 import com.github.cc3002.finalreality.model.character.Enemy;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.character.player.IPlayerCharacter;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Engineer;
 import com.github.cc3002.finalreality.model.character.player.commonCharacter.Knight;
+import com.github.cc3002.finalreality.model.character.player.commonCharacter.Thief;
+import com.github.cc3002.finalreality.model.character.player.magicCharacter.BlackMage;
 import com.github.cc3002.finalreality.model.character.player.magicCharacter.WhiteMage;
-import com.github.cc3002.finalreality.model.weapon.Axe;
-import com.github.cc3002.finalreality.model.weapon.IWeapon;
-import com.github.cc3002.finalreality.model.weapon.Staff;
-import com.github.cc3002.finalreality.model.weapon.Sword;
+import com.github.cc3002.finalreality.model.weapon.*;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,6 +29,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Rodrigo Urrea Loyola
  */
 public class GameController {
+    private final BufferedReader in;
     private final ArrayList<IPlayerCharacter> playerCharacters = new ArrayList<>();
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<IWeapon> weapons = new ArrayList<>();
@@ -34,52 +38,195 @@ public class GameController {
     private boolean playerWinner;
     private boolean freeTurn;
 
+    private final AlivePlayerCharacterHandler alivePlayerCharacterHandler;
+    private final AliveEnemyHandler aliveEnemyHandler;
+    private final EndTurnHandler endTurnHandler;
+    private final BeginTurnHandler beginTurnHandler;
+
     /**
      * Creates a new game, with a list of PlayerCharacters, a list of Enemies and a list of Weapons.
      * This elements can be used to simulate a game.
      */
-    public GameController(){
-        AlivePlayerCharacterHandler alivePlayerCharacterHandler = new AlivePlayerCharacterHandler(this);
-        AliveEnemyHandler aliveEnemyHandler = new AliveEnemyHandler(this);
-        EndTurnHandler endTurnHandler = new EndTurnHandler(this);
-        BeginTurnHandler beginTurnHandler = new BeginTurnHandler(this);
+    public GameController(BufferedReader initIn) throws IOException {
+        alivePlayerCharacterHandler = new AlivePlayerCharacterHandler(this);
+        aliveEnemyHandler = new AliveEnemyHandler(this);
+        endTurnHandler = new EndTurnHandler(this);
+        beginTurnHandler = new BeginTurnHandler(this);
         freeTurn = true;
         endGame = false;
         playerWinner = false;
 
-        Knight arthurKing = new Knight("King arthur", TURNS,1000,80);
-        playerCharacters.add(arthurKing);
-        arthurKing.addAliveListener(alivePlayerCharacterHandler);
-        arthurKing.addEndTurnListener(endTurnHandler);
-        arthurKing.addBeginTurnListener(beginTurnHandler);
-        Enemy commonGoblin = new Enemy("goblin", TURNS,150,10,30,5);
-        enemies.add(commonGoblin);
-        commonGoblin.addAliveListener(aliveEnemyHandler);
-        commonGoblin.addEndTurnListener(endTurnHandler);
-        commonGoblin.addBeginTurnListener(beginTurnHandler);
-        WhiteMage merlin = new WhiteMage("Merlin", TURNS,600,35,400);
-        playerCharacters.add(merlin);
-        merlin.addAliveListener(alivePlayerCharacterHandler);
-        merlin.addEndTurnListener(endTurnHandler);
-        merlin.addBeginTurnListener(beginTurnHandler);
-        Enemy archerGoblin = new Enemy("Archer goblin", TURNS,90,10,75,10);
-        enemies.add(archerGoblin);
-        archerGoblin.addAliveListener(aliveEnemyHandler);
-        archerGoblin.addEndTurnListener(endTurnHandler);
-        archerGoblin.addBeginTurnListener(beginTurnHandler);
-        Enemy goblinChampion = new Enemy("Goblin Champion", TURNS,1500,100,90,30);
-        enemies.add(goblinChampion);
-        goblinChampion.addAliveListener(aliveEnemyHandler);
-        goblinChampion.addEndTurnListener(endTurnHandler);
-        goblinChampion.addBeginTurnListener(beginTurnHandler);
-
-        Sword excalibur = new Sword("Excalibur",120,15);
-        weapons.add(excalibur);
-        Axe titanicHydra = new Axe("Titanic Hydra",200,40);
-        weapons.add(titanicHydra);
-        Staff chitauri = new Staff("Chitauri",15,25,200);
-        weapons.add(chitauri);
+        in = initIn;
+        initializeGame();
     }
+
+    /**
+     * Special constructor to make a artificial game. Used to define test cases.
+     * @param info a String with the information about de playerCharacters,enemies and weapons
+     */
+    public GameController(String info) throws IOException {
+        this(new BufferedReader(new StringReader(info)));
+    }
+
+    private void initializeGame() throws IOException {
+        String item;
+        do {
+            item = in.readLine();
+            if (item == null){
+                throw new IOException("end of input");
+            }
+            String[] features = item.split(";");
+            createItem(features);
+        } while (!item.equals(""));
+    }
+
+    /**
+     * This method creates an item (PlayerCharacter,Enemy,Weapon) with the info in features, this method
+     * uses the first string in features to determine the class of the created object. The created object
+     * is added to the game.
+     * @param features a list of Strings which contains the information about the object.
+     */
+    private void createItem(String[] features) {
+        if ("Knight".equals(features[0])) {
+            createKnight(features);
+        } else if ("Engineer".equals(features[0])) {
+            createEngineer(features);
+        } else if ("Thief".equals(features[0])) {
+            createThief(features);
+        } else if ("BlackMage".equals(features[0])) {
+            createBlackMage(features);
+        } else if ("WhiteMage".equals(features[0])) {
+            createWhiteMage(features);
+        } else if ("Enemy".equals(features[0])) {
+            createEnemy(features);
+        } else if ("Axe".equals(features[0])) {
+            createAxe(features);
+        } else if ("Bow".equals(features[0])) {
+            createBow(features);
+        } else if ("Knife".equals(features[0])) {
+            createKnife(features);
+        } else if ("Sword".equals(features[0])) {
+            createSword(features);
+        } else if ("Staff".equals(features[0])) {
+            createStaff(features);
+        }
+    }
+
+    /**
+     * This method creates a Knight whit the information in features
+     */
+    private void createKnight(String[] features) {
+        Knight character = new Knight(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPlayerCharacterToGame(character);
+    }
+
+
+    /**
+     * This method creates a Engineer whit the information in features
+     */
+    private void createEngineer(String[] features) {
+        Engineer character = new Engineer(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPlayerCharacterToGame(character);
+    }
+
+    /**
+     * This method creates a Thief whit the information in features
+     */
+    private void createThief(String[] features) {
+        Thief character = new Thief(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPlayerCharacterToGame(character);
+    }
+
+    /**
+     * This method creates a WhiteMage whit the information in features
+     */
+    private void createWhiteMage(String[] features) {
+        WhiteMage character = new WhiteMage(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]),Integer.parseInt(features[4]));
+        addPlayerCharacterToGame(character);
+    }
+
+    /**
+     * This method creates a BlackMage whit the information in features
+     */
+    private void createBlackMage(String[] features) {
+        BlackMage character = new BlackMage(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]),Integer.parseInt(features[4]));
+        addPlayerCharacterToGame(character);
+    }
+
+    /**
+     * This method creates an Enemy whit the information in features
+     */
+    private void createEnemy(String[] features) {
+        Enemy character = new Enemy(features[1],TURNS,Integer.parseInt(features[2]),Integer.parseInt(features[3]),Integer.parseInt(features[4]),Integer.parseInt(features[5]));
+        addEnemyToGame(character);
+    }
+
+    /**
+     * This method creates an Axe whit the information in features
+     */
+    private void createAxe(String[] features) {
+        Axe weapon = new Axe(features[1],Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPWeaponToGame(weapon);
+    }
+
+    /**
+     * This method creates a Bow whit the information in features
+     */
+    private void createBow(String[] features) {
+        Bow weapon = new Bow(features[1],Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPWeaponToGame(weapon);
+    }
+
+    /**
+     * This method creates a Knife whit the information in features
+     */
+    private void createKnife(String[] features) {
+        Knife weapon = new Knife(features[1],Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPWeaponToGame(weapon);
+    }
+
+    /**
+     * This method creates a Sword whit the information in features
+     */
+    private void createSword(String[] features) {
+        Sword weapon = new Sword(features[1],Integer.parseInt(features[2]),Integer.parseInt(features[3]));
+        addPWeaponToGame(weapon);
+    }
+
+    /**
+     * This method creates a Staff whit the information in features
+     */
+    private void createStaff(String[] features) {
+        Staff weapon = new Staff(features[1],Integer.parseInt(features[2]),Integer.parseInt(features[3]),Integer.parseInt(features[4]));
+        addPWeaponToGame(weapon);
+    }
+
+    /**
+     * This method add a PlayerCharacter to the playerCharacters array and add its Listeners.
+     */
+    private void addPlayerCharacterToGame(IPlayerCharacter character) {
+        playerCharacters.add(character);
+        character.addAliveListener(alivePlayerCharacterHandler);
+        character.addEndTurnListener(endTurnHandler);
+        character.addBeginTurnListener(beginTurnHandler);
+    }
+
+    /**
+     * This method add an Enemy to the enemies array and add its Listeners.
+     */
+    private void addEnemyToGame(Enemy character) {
+        enemies.add(character);
+        character.addAliveListener(aliveEnemyHandler);
+        character.addEndTurnListener(endTurnHandler);
+        character.addBeginTurnListener(beginTurnHandler);
+    }
+
+    /** This method add a Weapon to the weapons array.
+     */
+    private void addPWeaponToGame(IWeapon weapon) {
+        weapons.add(weapon);
+    }
+
 
     /**
      * Method that returns the BlockingQueue turns fo the game. This method is used in

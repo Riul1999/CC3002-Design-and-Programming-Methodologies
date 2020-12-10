@@ -1,5 +1,9 @@
 package com.github.cc3002.finalreality.model.character;
 
+import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveAbstractCharacterHandler;
+import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
+
 /**
  * This represents a character from the game.
  * A character can be controlled by the player or by the CPU (an enemy).
@@ -54,4 +58,22 @@ public interface ICharacter {
    * lifePoints, it's alive
    */
   boolean alive();
+
+  /**
+   * This method associates this AbstractCharacter whit the AliveAbstractCharacterHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  void addAliveListener(AliveAbstractCharacterHandler res);
+
+  /**
+   * This method associates this AbstractCharacter whit the EndTurnHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  void addEndTurnListener(EndTurnHandler res);
+
+  /**
+   * This method associates this AbstractCharacter whit the StartTurnHandler res
+   * @param res an Listener who observes this AbstractCharacter
+   */
+  void addBeginTurnListener(BeginTurnHandler res);
 }
