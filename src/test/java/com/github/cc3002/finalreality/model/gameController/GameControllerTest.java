@@ -1,6 +1,9 @@
 package com.github.cc3002.finalreality.model.gameController;
 
 import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.gui.gameController.InvalidActionException;
+import com.github.cc3002.finalreality.gui.phase.TurnPhase;
+import com.github.cc3002.finalreality.gui.phase.WaitPhase;
 import com.github.cc3002.finalreality.model.character.Enemy;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.character.player.IPlayerCharacter;
@@ -50,7 +53,6 @@ public class GameControllerTest {
     @Test
     public void checkConstruction(){
         assertTrue(testGame.getTURNS().isEmpty());
-        assertTrue(testGame.getFreeTurn());
         assertFalse(testGame.getEndGame());
         assertFalse(testGame.getPlayerWinner());
     }
@@ -146,29 +148,6 @@ public class GameControllerTest {
         assertEquals(5,testGame.getTURNS().size());
     }
 
-    /**
-     * Checks the correct behavior of the BeginTurnHandler and the method beginTurn
-     */
-    @Test
-    public void beginTurnTest() throws InterruptedException {
-        testGame.waitAllTurns();
-        ICharacter character = testGame.getTURNS().poll();
-        testGame.charactersAttack(character, testGame.getEnemy(1));
-        assertFalse(testGame.getFreeTurn());
-    }
-
-    /**
-     * Checks the correct behavior of the EndTurnHandler and the method endTurn
-     */
-    @Test
-    public void endTurnTest() throws InterruptedException {
-        testGame.waitAllTurns();
-        while (!testGame.getTURNS().isEmpty()){
-            ICharacter character = testGame.getTURNS().poll();
-            testGame.charactersAttack(character, testGame.getEnemy(2));
-        }
-        assertTrue(testGame.getFreeTurn());
-    }
 
     /**
      * Checks the correct behavior of the AliveEnemyHandler ,the method eliminateEnemy and the method checkEndByEnemy
@@ -203,5 +182,106 @@ public class GameControllerTest {
         }
         assertTrue(testGame.getEndGame());
         assertFalse(testGame.getPlayerWinner());
+    }
+
+    /**
+     * Checks the correct initialization of the controller phase.
+     */
+    @Test
+    public void checkInitialPhase(){
+        assertEquals(WaitPhase.class,testGame.getPhase().getClass());
+        assertNotEquals(TurnPhase.class, testGame.getPhase().getClass());
+    }
+
+    /**
+     *  This method checks that the method beginTurn change the Phase from WaitPhase to TurnPhase, that it throws
+     *  an InvalidActionException when the method is called out the WaitPhase, and checks that the actCharacterIndex and
+     *  actPlayerCharacter values are correct.
+     */
+    @Test
+    public void checkBeginTurn() throws IOException, InterruptedException {
+        String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
+        String testGoblin = "Enemy;goblin;150;10;30;30\n";
+        String testEngineer = "Engineer;beauchef's engineer;200;30\n";
+        String testAxe = "Axe;Titanic Hydra;200;40\n";
+        String testStaff = "Staff;Chitauri;15;25;200\n";
+        String input = testGoblin+testEngineer+testWhiteMage+testAxe+testStaff+"\n";
+        GameController controller = new GameController(input);
+
+        controller.equipWeapon(controller.getPlayer(1), controller.getWeapon(1));
+        controller.equipWeapon(controller.getPlayer(0), controller.getWeapon(0));
+        controller.waitAllTurns();
+        controller.beginTurn();
+        assertEquals(1,controller.getActCharacterIndex());
+        assertTrue(controller.getActPlayerCharacter());
+        assertEquals(controller.getTURNS().peek(),controller.getPlayer(controller.getActCharacterIndex()));
+        WhiteMage merlin = new WhiteMage("Merlin", controller.getTURNS(), 600,35,400);
+        merlin.equip(new Staff("Chitauri",15,25,200));
+        assertEquals(merlin,controller.getPlayer(controller.getActCharacterIndex()));
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+        boolean val = false;
+        try {
+            controller.getPhase().beginTurn();
+        }catch (InvalidActionException e){
+            val = true;
+        }
+        assertTrue(val);
+    }
+
+    /**
+     * This method checks if the method equipWeapon doesn't change the current state, and
+     * that it throws the InvalidActionException Exception when the method is called out the TurnPhase.
+     */
+    @Test
+    public void checkEquipWeapon() throws IOException {
+        String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
+        String testGoblin = "Enemy;goblin;150;10;30;30\n";
+        String testStaff = "Staff;Chitauri;15;25;200\n";
+        String testStaff2 = "Staff;Gandalf's Staff;20;40;250\n";
+        String input = testGoblin+testWhiteMage+testStaff+testStaff2+"\n";
+        GameController controller = new GameController(input);
+
+        boolean val = false;
+        try {
+            controller.getPhase().equipWeaponToActual(0);
+        } catch (InvalidActionException e){
+            val = true;
+        }
+        assertTrue(val);
+        controller.beginTurn();
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+        controller.equipWeaponToActual(0);
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+        controller.equipWeaponToActual(1);
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+    }
+
+    /**
+     * This method checks that the method actualAttack change the phase from TurnPhase to WaitPhase, and
+     * that it throws the InvalidActionException Exception when the method is called out the TurnPhase.
+     */
+    @Test
+    public void checkAttack() throws IOException, InterruptedException {
+        String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
+        String testGoblin = "Enemy;goblin;150;10;30;30\n";
+        String testStaff = "Staff;Chitauri;15;25;100\n";
+        String input = testGoblin+testWhiteMage+testStaff+"\n";
+        GameController controller = new GameController(input);
+
+        boolean val = false;
+        try {
+            controller.getPhase().actualAttack(0);
+        }catch (InvalidActionException e){
+            val = true;
+        }
+        assertTrue(val);
+
+
+        controller.getPlayer(0).waitTurn();
+        Thread.sleep(6000);
+        controller.beginTurn();
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+        controller.actualAttack(0);
+        assertEquals(WaitPhase.class,controller.getPhase().getClass());
     }
 }
