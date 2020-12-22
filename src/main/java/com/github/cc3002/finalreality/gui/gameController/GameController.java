@@ -4,6 +4,8 @@ import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveEnemyHandl
 import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AlivePlayerCharacterHandler;
 import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
 import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.gui.phase.IPhase;
+import com.github.cc3002.finalreality.gui.phase.WaitPhase;
 import com.github.cc3002.finalreality.model.character.Enemy;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 import com.github.cc3002.finalreality.model.character.player.IPlayerCharacter;
@@ -19,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -36,7 +39,9 @@ public class GameController {
     private final BlockingQueue<ICharacter> TURNS = new LinkedBlockingQueue<>();
     private boolean endGame;
     private boolean playerWinner;
-    private boolean freeTurn;
+    private IPhase actPhase;
+    private Integer actCharacterIndex;
+    private boolean actPlayerCharacter;
 
     private final AlivePlayerCharacterHandler alivePlayerCharacterHandler;
     private final AliveEnemyHandler aliveEnemyHandler;
@@ -52,9 +57,11 @@ public class GameController {
         aliveEnemyHandler = new AliveEnemyHandler(this);
         endTurnHandler = new EndTurnHandler(this);
         beginTurnHandler = new BeginTurnHandler(this);
-        freeTurn = true;
         endGame = false;
         playerWinner = false;
+        actPhase = new WaitPhase(this);
+        actCharacterIndex = -1;
+        actPlayerCharacter = false;
 
         in = initIn;
         initializeGame();
@@ -284,6 +291,7 @@ public class GameController {
      * @param character an IPlayerCharacter that has been defeated
      */
     public void eliminatePlayerCharacter(IPlayerCharacter character) {
+        TURNS.remove(character);
         playerCharacters.remove(character);
         checkEndByPlayer();
     }
@@ -294,6 +302,7 @@ public class GameController {
      * @param character an Enemy that has been defeated
      */
     public void eliminateEnemy(Enemy character) {
+        TURNS.remove(character);
         enemies.remove(character);
         checkEndByEnemy();
     }
@@ -348,7 +357,11 @@ public class GameController {
      * This method will probably change later, is only a prototype.
      */
     public void endTurn(){
-        freeTurn = true;
+        try {
+            actPhase.endTurn();
+        } catch (InvalidActionException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -357,14 +370,18 @@ public class GameController {
      * This method will probably change later, is only a prototype.
      */
     public void beginTurn() {
-        freeTurn = false;
-    }
-
-    /**
-     * This method returns the value of freeTurn.
-     */
-    public boolean getFreeTurn(){
-        return freeTurn;
+        try {
+            actPhase.beginTurn();
+        } catch (InvalidActionException e) {
+            e.printStackTrace();
+        }
+        if (!actPlayerCharacter && actCharacterIndex!= -1){
+            Enemy actEnemy = enemies.get(actCharacterIndex);
+            Random r = new Random();
+            int plyrIndex = r.nextInt(playerCharacters.size());
+            IPlayerCharacter plyr = playerCharacters.get(plyrIndex);
+            charactersAttack( actEnemy, plyr);
+        }
     }
 
     /**
@@ -374,4 +391,60 @@ public class GameController {
         return endGame;
     }
 
+    /**
+     * This method returns the actual Phase of the controller.
+     */
+    public IPhase getPhase(){
+        return actPhase;
+    }
+
+    public void changePhase(IPhase aPhase) {
+        this.actPhase = aPhase;
+    }
+
+    public Integer getActCharacterIndex(){
+        return actCharacterIndex;
+    }
+
+    public boolean getActPlayerCharacter(){
+        return actPlayerCharacter;
+    }
+
+    public void setActPlayerCharacter(ICharacter character) {
+        if (playerCharacters.contains(character)){
+            actPlayerCharacter = true;
+            actCharacterIndex = playerCharacters.indexOf(character);
+        } else {
+            actPlayerCharacter = false;
+            actCharacterIndex = enemies.indexOf(character);
+        }
+    }
+
+    public void addToTURNS() {
+        //if (actPlayerCharacter){
+        //    playerCharacters.get(actCharacterIndex).waitTurn();
+        //} else {
+        //    enemies.get(actCharacterIndex).waitTurn();
+        //}
+        actCharacterIndex = -1;
+        actPlayerCharacter = false;
+    }
+
+    public void equipWeaponToActual(Integer weaponPos){
+        if (actPlayerCharacter){
+            try {
+                actPhase.equipWeaponToActual(weaponPos);
+            } catch (InvalidActionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void actualAttack(Integer attackedPos){
+        try {
+            actPhase.actualAttack( attackedPos);
+        } catch (InvalidActionException e) {
+            e.printStackTrace();
+        }
+    }
 }
