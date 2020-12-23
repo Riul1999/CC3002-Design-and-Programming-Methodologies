@@ -34,7 +34,7 @@ public class GameControllerTest {
      * Do a basic SetUp for all the tests
      */
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() {
         String testKnight = "Knight;King arthur;1000;80\n";
         String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
         String testGoblin = "Enemy;goblin;150;10;30;5\n";
@@ -44,7 +44,8 @@ public class GameControllerTest {
         String testAxe = "Axe;Titanic Hydra;200;40\n";
         String testStaff = "Staff;Chitauri;15;25;200\n";
         String input = testKnight+testGoblin+testWhiteMage+testArcherGoblin+testGoblinChampion+testSword+testAxe+testStaff+"\n";
-        testGame = new GameController(input);
+        testGame = new GameController();
+        testGame.initializeGame(input);
     }
 
     /**
@@ -61,7 +62,7 @@ public class GameControllerTest {
      * Checks the correct beavior of the initializeGame method.
      */
     @Test
-    public void checkInitializeGame() throws IOException {
+    public void checkInitializeGame() {
         String testKnight = "Knight;King arthur;1000;80\n";
         String testEngineer = "Engineer;beauchef's engineer;200;30\n";
         String testThief = "Thief;Bank Thief;100;10\n";
@@ -74,7 +75,8 @@ public class GameControllerTest {
         String testSword = "Sword;Excalibur;120;15\n";
         String testStaff = "Staff;Chitauri;15;25;200\n";
         String input = testKnight+testEngineer+testThief+testWhiteMage+testBlackMage+testGoblin+testAxe+testBow+testKnife+testSword+testStaff+"\n";
-        GameController newGame = new GameController(input);
+        GameController newGame = new GameController();
+        newGame.initializeGame(input);
         assertEquals(new Knight("King arthur", newGame.getTURNS(), 1000,80),newGame.getPlayer(0));
         assertEquals(new Engineer("beauchef's engineer", newGame.getTURNS(), 200,30),newGame.getPlayer(1));
         assertEquals(new Thief("Bank Thief", newGame.getTURNS(), 100,10),newGame.getPlayer(2));
@@ -141,7 +143,7 @@ public class GameControllerTest {
      * Checks if the method waitAllTurns put all the characters on the queue TURNS
      */
     @Test
-    public void waitAllTurnsTest() throws InterruptedException {
+    public void waitAllTurnsTest() {
         assertTrue(testGame.getTURNS().isEmpty());
         testGame.waitAllTurns();
         assertFalse(testGame.getTURNS().isEmpty());
@@ -199,18 +201,20 @@ public class GameControllerTest {
      *  actPlayerCharacter values are correct.
      */
     @Test
-    public void checkBeginTurn() throws IOException, InterruptedException {
+    public void checkBeginTurn() {
         String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
-        String testGoblin = "Enemy;goblin;150;10;30;30\n";
+        String testGoblin = "Enemy;goblin;150;15;30;30\n";
         String testEngineer = "Engineer;beauchef's engineer;200;30\n";
         String testAxe = "Axe;Titanic Hydra;200;40\n";
         String testStaff = "Staff;Chitauri;15;25;200\n";
         String input = testGoblin+testEngineer+testWhiteMage+testAxe+testStaff+"\n";
-        GameController controller = new GameController(input);
+        GameController controller = new GameController();
+        controller.initializeGame(input);
 
         controller.equipWeapon(controller.getPlayer(1), controller.getWeapon(1));
         controller.equipWeapon(controller.getPlayer(0), controller.getWeapon(0));
         controller.waitAllTurns();
+
         controller.beginTurn();
         assertEquals(1,controller.getActCharacterIndex());
         assertTrue(controller.getActPlayerCharacter());
@@ -219,6 +223,7 @@ public class GameControllerTest {
         merlin.equip(new Staff("Chitauri",15,25,200));
         assertEquals(merlin,controller.getPlayer(controller.getActCharacterIndex()));
         assertEquals(TurnPhase.class,controller.getPhase().getClass());
+
         boolean val = false;
         try {
             controller.getPhase().beginTurn();
@@ -226,6 +231,16 @@ public class GameControllerTest {
             val = true;
         }
         assertTrue(val);
+
+        controller.charactersAttack(controller.getPlayer(1), controller.getEnemy(0) );
+
+        assertEquals(0,controller.getActCharacterIndex());
+        assertFalse(controller.getActPlayerCharacter());
+        assertEquals(controller.getTURNS().peek(),controller.getEnemy(controller.getActCharacterIndex()));
+        assertTrue(controller.getActTarget() != -1);
+        Enemy goblin = new Enemy("goblin", controller.getTURNS(), 150,15,30,30);
+        assertEquals(goblin, controller.getEnemy(controller.getActCharacterIndex()));
+        assertEquals(TurnPhase.class, controller.getPhase().getClass());
     }
 
     /**
@@ -233,13 +248,14 @@ public class GameControllerTest {
      * that it throws the InvalidActionException Exception when the method is called out the TurnPhase.
      */
     @Test
-    public void checkEquipWeapon() throws IOException {
+    public void checkEquipWeapon() {
         String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
         String testGoblin = "Enemy;goblin;150;10;30;30\n";
         String testStaff = "Staff;Chitauri;15;25;200\n";
         String testStaff2 = "Staff;Gandalf's Staff;20;40;250\n";
         String input = testGoblin+testWhiteMage+testStaff+testStaff2+"\n";
-        GameController controller = new GameController(input);
+        GameController controller = new GameController();
+        controller.initializeGame(input);
 
         boolean val = false;
         try {
@@ -261,12 +277,13 @@ public class GameControllerTest {
      * that it throws the InvalidActionException Exception when the method is called out the TurnPhase.
      */
     @Test
-    public void checkAttack() throws IOException, InterruptedException {
+    public void checkAttack() throws InterruptedException {
         String testWhiteMage = "WhiteMage;Merlin;600;35;400\n";
-        String testGoblin = "Enemy;goblin;150;10;30;30\n";
+        String testGoblin = "Enemy;goblin;150;10;60;30\n";
         String testStaff = "Staff;Chitauri;15;25;100\n";
         String input = testGoblin+testWhiteMage+testStaff+"\n";
-        GameController controller = new GameController(input);
+        GameController controller = new GameController();
+        controller.initializeGame(input);
 
         boolean val = false;
         try {
@@ -276,12 +293,22 @@ public class GameControllerTest {
         }
         assertTrue(val);
 
-
         controller.getPlayer(0).waitTurn();
         Thread.sleep(6000);
         controller.beginTurn();
         assertEquals(TurnPhase.class,controller.getPhase().getClass());
-        controller.actualAttack(0);
+        controller.equipWeaponToActual(0);
+        controller.setActTarget(0);
+        controller.actualAttack();
         assertEquals(WaitPhase.class,controller.getPhase().getClass());
+        assertTrue(controller.getEnemy(0).getLifePoints() < 150);
+
+        controller.getEnemy(0).waitTurn();
+        Thread.sleep(6000);
+        controller.beginTurn();
+        assertEquals(TurnPhase.class,controller.getPhase().getClass());
+        controller.actualAttack();
+        assertEquals(WaitPhase.class,controller.getPhase().getClass());
+        assertTrue(controller.getPlayer(0).getLifePoints() < 600);
     }
 }

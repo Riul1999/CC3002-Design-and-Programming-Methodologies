@@ -6,6 +6,10 @@ import com.github.cc3002.finalreality.gui.gameController.InvalidActionException;
 public class Phase  implements IPhase{
     protected final GameController controller;
 
+    /**
+     * Creates a new Phase an associate ir with its game.
+     * @param gameController the controller associated to this Phase.
+     */
     public Phase(GameController gameController){
         this.controller = gameController;
     }
