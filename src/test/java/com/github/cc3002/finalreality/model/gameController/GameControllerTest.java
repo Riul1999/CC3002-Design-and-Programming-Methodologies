@@ -16,14 +16,12 @@ import com.github.cc3002.finalreality.model.weapon.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Set of tests for the GameController class.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class GameControllerTest {
@@ -56,6 +54,11 @@ public class GameControllerTest {
         assertTrue(testGame.getTURNS().isEmpty());
         assertFalse(testGame.getEndGame());
         assertFalse(testGame.getPlayerWinner());
+        assertEquals(WaitPhase.class,testGame.getPhase().getClass());
+        assertEquals(-1,testGame.getActCharacterIndex());
+        assertFalse(testGame.getActPlayerCharacter());
+        assertEquals(-1,testGame.getActTarget());
+        assertEquals("",testGame.getInfo());
     }
 
     /**
@@ -156,17 +159,22 @@ public class GameControllerTest {
      */
     @Test
     public void eliminateEnemyTest(){
-        testGame.eliminateEnemy(testGame.getEnemy(0));
-        testGame.eliminateEnemy(testGame.getEnemy(1));
+        GameController c = new GameController();
+        String testKnight = "Knight;King arthur;1000;80\n";
+        String testGoblin = "Enemy;goblin;1500;100;300;5\n";
+        String testGoblin2 = "Enemy;goblin;1;0;1;50\n";
+        String testSword = "Sword;Excalibur;120;15\n";
+        String input = testGoblin+testGoblin2+testKnight+testSword+"\n";
+        c.initializeGame(input);
 
-        IPlayerCharacter player = testGame.getPlayer(0);
-        testGame.equipWeapon(player,testGame.getWeapon(0));
-        Enemy enemy = testGame.getEnemy(0);
-        assertFalse(testGame.getEndGame());
-        testGame.charactersAttack(player,enemy);
-        assertFalse(enemy.alive());
-        assertTrue(testGame.getEndGame());
-        assertTrue(testGame.getPlayerWinner());
+        assertFalse(c.getEndGame());
+        c.eliminateEnemy(c.getEnemy(0));
+
+        c.equipWeapon(c.getPlayer(0),c.getWeapon(0));
+        c.charactersAttack(c.getPlayer(0),c.getEnemy(1));
+
+        assertTrue(c.getEndGame());
+        assertTrue(c.getPlayerWinner());
     }
 
     /**
@@ -174,16 +182,20 @@ public class GameControllerTest {
      */
     @Test
     public void eliminatePlayerTest(){
-        testGame.eliminatePlayerCharacter(testGame.getPlayer(0));
+        GameController c = new GameController();
+        String testKnight = "Knight;King arthur;1000;80\n";
+        String testKnight2 = "Knight;King arthur's son;100;10\n";
+        String testGoblin = "Enemy;goblin;1500;100;300;5\n";
+        String input = testGoblin+testKnight+testKnight2+"\n";
+        c.initializeGame(input);
 
-        IPlayerCharacter player = testGame.getPlayer(0);
-        Enemy enemy = testGame.getEnemy(2);
-        assertFalse(testGame.getEndGame());
-        while(player.alive()) {
-            testGame.charactersAttack(enemy, player);
-        }
-        assertTrue(testGame.getEndGame());
-        assertFalse(testGame.getPlayerWinner());
+        assertFalse(c.getEndGame());
+        c.eliminatePlayerCharacter(c.getPlayer(0));
+
+        c.charactersAttack(c.getEnemy(0),c.getPlayer(1));
+
+        assertTrue(c.getEndGame());
+        assertFalse(c.getPlayerWinner());
     }
 
     /**
@@ -244,6 +256,42 @@ public class GameControllerTest {
     }
 
     /**
+     * This method checks the correct behavior of the changePhase method.
+     */
+    @Test
+    public void checkChangePhase(){
+        assertEquals(WaitPhase.class,testGame.getPhase().getClass());
+        testGame.changePhase( new TurnPhase(testGame));
+        assertEquals(TurnPhase.class,testGame.getPhase().getClass());
+    }
+
+    /**
+     * This method checks the correct behavior of the setActualPlayerCharacter method.
+     */
+    @Test
+    public void checkSetActPlayerCharacter(){
+        testGame.setActPlayerCharacter(testGame.getPlayer(0));
+        assertTrue(testGame.getActPlayerCharacter());
+        assertEquals(0,testGame.getActCharacterIndex());
+
+        testGame.setActPlayerCharacter(testGame.getEnemy(0));
+        assertFalse(testGame.getActPlayerCharacter());
+        assertEquals(0,testGame.getActCharacterIndex());
+    }
+
+    /**
+     * This method checks the correct behavior of the resetTurn method.
+     */
+    @Test
+    public void checksResetTurn(){
+        testGame.setActPlayerCharacter(testGame.getPlayer(0));
+        testGame.resetTurn();
+        assertEquals(-1,testGame.getActCharacterIndex());
+        assertFalse(testGame.getActPlayerCharacter());
+        assertEquals(-1,testGame.getActTarget());
+    }
+
+    /**
      * This method checks if the method equipWeapon doesn't change the current state, and
      * that it throws the InvalidActionException Exception when the method is called out the TurnPhase.
      */
@@ -270,6 +318,16 @@ public class GameControllerTest {
         assertEquals(TurnPhase.class,controller.getPhase().getClass());
         controller.equipWeaponToActual(1);
         assertEquals(TurnPhase.class,controller.getPhase().getClass());
+    }
+
+    /**
+     * This method checks the correct behavior of the setActTarget method.
+     */
+    @Test
+    public void checkSetActTarget(){
+        assertEquals(-1,testGame.getActTarget());
+        testGame.setActTarget(0);
+        assertEquals(0,testGame.getActTarget());
     }
 
     /**
@@ -310,5 +368,95 @@ public class GameControllerTest {
         controller.actualAttack();
         assertEquals(WaitPhase.class,controller.getPhase().getClass());
         assertTrue(controller.getPlayer(0).getLifePoints() < 600);
+    }
+
+    /**
+     * Checks the correct behavior of the getAlivePlayer method.
+     */
+    @Test
+    public void checkGetAlivePlayer(){
+        assertEquals(testGame.getPlayer(0),testGame.getAlivePlayer(0));
+        testGame.eliminatePlayerCharacter(testGame.getPlayer(0));
+        assertEquals(testGame.getPlayer(1),testGame.getAlivePlayer(0));
+    }
+
+    /**
+     * Checks the correct behavior of the getStringOfPlayer method.
+     */
+    @Test
+    public void checkGetStringOfPlayer(){
+        String player1 = "Name: King arthur"+"\n"+
+                "HP: 1000"+"\n"+"DF: 80"+ "\n"+
+                "W.N.: Hand"+"\n"+"W.D.: 1"+ "\n"+
+                "W.W.: 10";
+        String player2 = "Name: Merlin"+"\n"+
+                "HP: 600"+"\n"+"DF: 35"+ "\n"+
+                "W.N.: Hand"+"\n"+"W.D.: 1"+ "\n"+
+                "W.W.: 10";
+        assertEquals(player1,testGame.getStringOfPlayer(0));
+        assertEquals(player2,testGame.getStringOfPlayer(1));
+    }
+
+    /**
+     * Checks the correct behavior of the getStringOfEnemy method.
+     */
+    @Test
+    public void checkGetStringOfEnemy(){
+        String enemy1 = "Name: goblin"+"\n"+
+                "HP: 150"+"\n"+"DF: 10"+ "\n"+
+                "DMG: 30"+"\n"+"WGT: 5";
+        String enemy2 = "Name: Archer goblin"+"\n"+
+                "HP: 90"+"\n"+"DF: 10"+ "\n"+
+                "DMG: 75"+"\n"+"WGT: 10";
+        assertEquals(enemy1,testGame.getStringOfEnemy(0));
+        assertEquals(enemy2,testGame.getStringOfEnemy(1));
+    }
+
+    /**
+     * Checks the correct behavior of the getStringOfWeapon method.
+     */
+    @Test
+    public void checkGetStringOfWeapon(){
+        String weapon1 = "Name: Excalibur"+"\n"+
+                "DMG: 120"+"\n"+"WGT: 15";
+        String weapon2 = "Name: Titanic Hydra"+"\n"+
+                "DMG: 200"+"\n"+"WGT: 40";
+        assertEquals(weapon1,testGame.getStringOfWeapon(0));
+        assertEquals(weapon2,testGame.getStringOfWeapon(1));
+    }
+
+    /**
+     * Checks the correct behavior of the getStringOfPhase method.
+     */
+    @Test
+    public void checkStringOfPhase(){
+        assertEquals("WaitPhase",testGame.getStringOfPhase());
+
+        testGame.changePhase( new TurnPhase(testGame));
+        testGame.setActPlayerCharacter(testGame.getPlayer(0));
+        assertEquals("Player Turn",testGame.getStringOfPhase());
+        testGame.setActPlayerCharacter(testGame.getEnemy(0));
+        assertEquals("Enemy Turn",testGame.getStringOfPhase());
+    }
+
+    /**
+     * Checks the correct behavior of the resetInfo method.
+     */
+    @Test
+    public void checkResetInfo(){
+        assertEquals("",testGame.getInfo());
+        testGame.actualAttack();
+        assertNotEquals("",testGame.getInfo());
+        testGame.resetInfo();
+        assertEquals("",testGame.getInfo());
+    }
+
+    @Test
+    public void checkBeginRound(){
+        assertEquals(WaitPhase.class,testGame.getPhase().getClass());
+        assertTrue(testGame.getTURNS().isEmpty());
+        testGame.beginRound();
+        assertFalse(testGame.getTURNS().isEmpty());
+        assertEquals(TurnPhase.class,testGame.getPhase().getClass());
     }
 }

@@ -9,7 +9,6 @@ import java.beans.PropertyChangeEvent;
  * This handler observes if a enemy dies, and if it does, the handler calls the eliminateEnemy method.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class AliveEnemyHandler extends AliveAbstractCharacterHandler {

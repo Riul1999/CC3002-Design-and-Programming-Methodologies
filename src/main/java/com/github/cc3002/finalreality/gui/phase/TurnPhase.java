@@ -1,9 +1,12 @@
 package com.github.cc3002.finalreality.gui.phase;
 
 import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.gui.gameController.InvalidActionException;
 
 /**
  * This State represents when the GameController has an active Character.
+ *
+ * @author Rodrigo Urrea Loyola.
  */
 public class TurnPhase extends Phase{
     public TurnPhase(GameController gameController) {
@@ -36,11 +39,22 @@ public class TurnPhase extends Phase{
      * @param attackedPos the position of the attacked character.
      */
     @Override
-    public void actualAttack(Integer attackedPos){
+    public void actualAttack(Integer attackedPos) throws InvalidActionException {
+        if (attackedPos < 0 )
+            throw new InvalidActionException("Error, please select a target");
         if( controller.getActPlayerCharacter()){
             controller.charactersAttack(controller.getPlayer(controller.getActCharacterIndex()), controller.getEnemy(attackedPos));
         } else {
-            controller.charactersAttack(controller.getEnemy(controller.getActCharacterIndex()),controller.getPlayer(attackedPos));
+            controller.charactersAttack(controller.getEnemy(controller.getActCharacterIndex()),controller.getAlivePlayer(attackedPos));
+        }
+    }
+
+    @Override
+    public String toString(){
+        if(controller.getActPlayerCharacter()){
+            return "Player Turn";
+        } else{
+            return "Enemy Turn";
         }
     }
 }

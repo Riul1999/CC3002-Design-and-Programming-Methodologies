@@ -2,6 +2,11 @@ package com.github.cc3002.finalreality.gui.phase;
 
 import com.github.cc3002.finalreality.gui.gameController.InvalidActionException;
 
+/**
+ * This represents a the state (phase) of a GameController.
+ *
+ * @author Rodrigo Urrea Loyola.
+ */
 public interface IPhase {
 
     /**

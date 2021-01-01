@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
  * ICharacter who has ended its turn and finally print the name of the character.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class EndTurnHandler implements PropertyChangeListener {

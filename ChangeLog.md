@@ -1,5 +1,10 @@
 ChangeLog
 =========
+Version 7.0
+-----------
+- (RC.1) Se corren test de todo el codigo y se logran 95% de lineas y 86% de branches.
+- (B.1) Se implementa la interfaz grafica y algunos metodos en GameController que esta utiliza.
+
 Version 6.0
 -----------
 - (RC.2) Con esto se logran cubir los requisitos de la tarea 2

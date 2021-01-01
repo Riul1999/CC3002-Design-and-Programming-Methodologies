@@ -9,7 +9,6 @@ import java.beans.PropertyChangeEvent;
  * This handler observes if a playerCharacter dies, and if it does, the handler calls the eliminatePlayer method.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class AlivePlayerCharacterHandler extends AliveAbstractCharacterHandler {
