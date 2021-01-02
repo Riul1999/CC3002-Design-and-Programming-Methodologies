@@ -1,6 +1,6 @@
-package com.github.cc3002.finalreality.gui.handlers.AliveHandlers;
+package com.github.cc3002.finalreality.controller.handlers.AliveHandlers;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 import com.github.cc3002.finalreality.model.character.Enemy;
 
 import java.beans.PropertyChangeEvent;
@@ -9,7 +9,6 @@ import java.beans.PropertyChangeEvent;
  * This handler observes if a enemy dies, and if it does, the handler calls the eliminateEnemy method.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class AliveEnemyHandler extends AliveAbstractCharacterHandler {

@@ -9,7 +9,7 @@ import java.util.Objects;
  * A class that holds all the information of an axe.
  *
  * @author Ignacio Slater Muñoz.
- * @author Rodrigo Urrea Loyola
+ * @author Rodrigo Urrea Loyola.
  */
 public class Axe extends AbstractWeapon {
 

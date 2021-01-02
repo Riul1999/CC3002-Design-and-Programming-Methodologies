@@ -1,9 +1,9 @@
-package com.github.cc3002.finalreality.gui.gameController;
+package com.github.cc3002.finalreality.controller.gameController;
 
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveEnemyHandler;
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AlivePlayerCharacterHandler;
-import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
-import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AliveEnemyHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AlivePlayerCharacterHandler;
+import com.github.cc3002.finalreality.controller.handlers.EndTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.BeginTurnHandler;
 import com.github.cc3002.finalreality.gui.phase.IPhase;
 import com.github.cc3002.finalreality.gui.phase.WaitPhase;
 import com.github.cc3002.finalreality.model.character.Enemy;
@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,13 +29,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * A class that controls the development of a game.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class GameController {
-    private final BufferedReader in;
     private final ArrayList<IPlayerCharacter> playerCharacters = new ArrayList<>();
+    private final ArrayList<IPlayerCharacter> alivePlayerCharacters = new ArrayList<>();
     private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private final ArrayList<Enemy> aliveEnemies = new ArrayList<>();
     private final ArrayList<IWeapon> weapons = new ArrayList<>();
     private final BlockingQueue<ICharacter> TURNS = new LinkedBlockingQueue<>();
     private boolean endGame;
@@ -42,17 +43,18 @@ public class GameController {
     private IPhase actPhase;
     private Integer actCharacterIndex;
     private boolean actPlayerCharacter;
+    private Integer actTarget;
 
     private final AlivePlayerCharacterHandler alivePlayerCharacterHandler;
     private final AliveEnemyHandler aliveEnemyHandler;
     private final EndTurnHandler endTurnHandler;
     private final BeginTurnHandler beginTurnHandler;
+    private String info;
 
     /**
-     * Creates a new game, with a list of PlayerCharacters, a list of Enemies and a list of Weapons.
-     * This elements can be used to simulate a game.
+     * Creates a new game, and initialize a lot of parameters that will be used to simulates a game.
      */
-    public GameController(BufferedReader initIn) throws IOException {
+    public GameController() {
         alivePlayerCharacterHandler = new AlivePlayerCharacterHandler(this);
         aliveEnemyHandler = new AliveEnemyHandler(this);
         endTurnHandler = new EndTurnHandler(this);
@@ -62,29 +64,36 @@ public class GameController {
         actPhase = new WaitPhase(this);
         actCharacterIndex = -1;
         actPlayerCharacter = false;
-
-        in = initIn;
-        initializeGame();
+        actTarget = -1;
+        info = "";
     }
 
     /**
-     * Special constructor to make a artificial game. Used to define test cases.
-     * @param info a String with the information about de playerCharacters,enemies and weapons
+     * This method receives the String info, with a codification of the elements of the game (Characters, weapons), and
+     * creates its, including its to the GameController.
+     * This method must be called before play a game.
+     * @param info a String with the codification of the elements of the game.
      */
-    public GameController(String info) throws IOException {
-        this(new BufferedReader(new StringReader(info)));
-    }
-
-    private void initializeGame() throws IOException {
-        String item;
+    public void initializeGame(String info) {
+        BufferedReader in = new BufferedReader(new StringReader(info));
+        String item = null;
         do {
-            item = in.readLine();
-            if (item == null){
-                throw new IOException("end of input");
+            try {
+                item = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            String[] features = item.split(";");
-            createItem(features);
-        } while (!item.equals(""));
+            if (item == null){
+                try {
+                    throw new IOException("end of input");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String[] features = item.split(";");
+                createItem(features);
+            }
+        } while (!Objects.equals(item, ""));
     }
 
     /**
@@ -213,6 +222,7 @@ public class GameController {
      */
     private void addPlayerCharacterToGame(IPlayerCharacter character) {
         playerCharacters.add(character);
+        alivePlayerCharacters.add(character);
         character.addAliveListener(alivePlayerCharacterHandler);
         character.addEndTurnListener(endTurnHandler);
         character.addBeginTurnListener(beginTurnHandler);
@@ -223,6 +233,7 @@ public class GameController {
      */
     private void addEnemyToGame(Enemy character) {
         enemies.add(character);
+        aliveEnemies.add(character);
         character.addAliveListener(aliveEnemyHandler);
         character.addEndTurnListener(endTurnHandler);
         character.addBeginTurnListener(beginTurnHandler);
@@ -287,33 +298,30 @@ public class GameController {
 
     /**
      * This method removes a defeated PlayerCharacter from playerCharacters.
-     * This method probably will change later, is only a prototype.
      * @param character an IPlayerCharacter that has been defeated
      */
     public void eliminatePlayerCharacter(IPlayerCharacter character) {
         TURNS.remove(character);
-        playerCharacters.remove(character);
+        alivePlayerCharacters.remove(character);
         checkEndByPlayer();
     }
 
     /**
      * This method removes a defeated Enemy from enemies.
-     * This method probably will change later, is only a prototype.
      * @param character an Enemy that has been defeated
      */
     public void eliminateEnemy(Enemy character) {
         TURNS.remove(character);
-        enemies.remove(character);
+        aliveEnemies.remove(character);
         checkEndByEnemy();
     }
 
     /**
      * This method check if the game is ended because all the playerCharacters were defeated.
      * This method update the value of endGame and playerWinner.
-     * This method will probably change later, is only a prototype.
      */
     public void checkEndByPlayer() {
-        endGame = playerCharacters.isEmpty();
+        endGame = alivePlayerCharacters.isEmpty();
         if (endGame)
             playerWinner = false;
     }
@@ -321,67 +329,19 @@ public class GameController {
     /**
      * This method check if the game is ended because all the enemies were defeated.
      * This method update the value of endGame and playerWinner.
-     * This method will probably change later, is only a prototype.
      */
     public void checkEndByEnemy() {
-        endGame = enemies.isEmpty();
+        endGame = aliveEnemies.isEmpty();
         if (endGame)
             playerWinner = true;
     }
 
     /**
      * This method returns if the playerCharacters wins or not, this value only get sense if
-     * the value of endGame is true. This method will probably change later, is only a prototype.
+     * the value of endGame is true.
      */
     public boolean getPlayerWinner(){
         return playerWinner;
-    }
-
-    /**
-     * This method puts all the characters of the game into the queue TURNS, and wait 6 seconds.
-     * This method probably will change later, is only a prototype.
-     */
-    public void waitAllTurns() throws InterruptedException {
-        for (ICharacter character:playerCharacters){
-            character.waitTurn();
-        }
-        for (ICharacter character:enemies){
-            character.waitTurn();
-        }
-        Thread.sleep(6000);
-    }
-
-    /**
-     * This method is executed when a EndTurnHandler is alerted, this method change
-     * the value of freeTurn to true, to indicate that the last turn was finished.
-     * This method will probably change later, is only a prototype.
-     */
-    public void endTurn(){
-        try {
-            actPhase.endTurn();
-        } catch (InvalidActionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This method is executed when a BeginTurnHandler is alerted, this method change
-     * the value of freeTurn to false, to indicate that the a new turn will begin.
-     * This method will probably change later, is only a prototype.
-     */
-    public void beginTurn() {
-        try {
-            actPhase.beginTurn();
-        } catch (InvalidActionException e) {
-            e.printStackTrace();
-        }
-        if (!actPlayerCharacter && actCharacterIndex!= -1){
-            Enemy actEnemy = enemies.get(actCharacterIndex);
-            Random r = new Random();
-            int plyrIndex = r.nextInt(playerCharacters.size());
-            IPlayerCharacter plyr = playerCharacters.get(plyrIndex);
-            charactersAttack( actEnemy, plyr);
-        }
     }
 
     /**
@@ -392,24 +352,90 @@ public class GameController {
     }
 
     /**
+     * This method puts all the characters of the game into the queue TURNS, and wait 6 seconds.
+     */
+    public void waitAllTurns() {
+        for (ICharacter character:alivePlayerCharacters){
+            character.waitTurn();
+        }
+        for (ICharacter character:aliveEnemies){
+            character.waitTurn();
+        }
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method is executed when a EndTurnHandler is alerted or by the interface.
+     * This method call the endTurn method of the actPhase class, if the actPhase isn't
+     * TurnPhase it will throw an InvalidActionException.
+     */
+    public void endTurn(){
+        try {
+            actPhase.endTurn();
+        } catch (InvalidActionException e) {
+            info += e.getMessage()+"\n";
+        }
+    }
+
+    /**
+     * This method is executed when a BeginTurnHandler is alerted or by the interface.
+     * This method call the beginTurn method of the actPhase class, if the actPhase isn't
+     * a WaitPhase it will throw an InvalidActionException.
+     * If the new actual Character is an Enemy, this method sets the target index of
+     * the Enemy.
+     */
+    public void beginTurn() {
+        try {
+            actPhase.beginTurn();
+        } catch (InvalidActionException e) {
+            info += e.getMessage()+"\n";
+        }
+        if (!actPlayerCharacter && actCharacterIndex!= -1){
+            Random r = new Random();
+            int plyrIndex = r.nextInt(alivePlayerCharacters.size());
+            setActTarget(plyrIndex);
+        }
+    }
+
+    /**
      * This method returns the actual Phase of the controller.
      */
     public IPhase getPhase(){
         return actPhase;
     }
 
+    /**
+     * This method change the current phase of the gameController.
+     * @param aPhase the new phase
+     */
     public void changePhase(IPhase aPhase) {
         this.actPhase = aPhase;
     }
 
+    /**
+     * This method returns the value of actCharacterIndex
+     */
     public Integer getActCharacterIndex(){
         return actCharacterIndex;
     }
 
+    /**
+     * This method returns a boolean that indicates if the actCharacter is a
+     * PlayerCharacter.
+     */
     public boolean getActPlayerCharacter(){
         return actPlayerCharacter;
     }
 
+    /**
+     * This method change the value of actCharacterIndex and actPlayerCharacter.
+     * This method is only called from the method beginTurn in the WaitPhase class.
+     * @param character the new actual character.
+     */
     public void setActPlayerCharacter(ICharacter character) {
         if (playerCharacters.contains(character)){
             actPlayerCharacter = true;
@@ -420,31 +446,137 @@ public class GameController {
         }
     }
 
-    public void addToTURNS() {
-        //if (actPlayerCharacter){
-        //    playerCharacters.get(actCharacterIndex).waitTurn();
-        //} else {
-        //    enemies.get(actCharacterIndex).waitTurn();
-        //}
+    /**
+     * This method resets the value of the actual variables of the actual turn.
+     */
+    public void resetTurn() {
         actCharacterIndex = -1;
         actPlayerCharacter = false;
+        actTarget = -1;
     }
 
+    /**
+     * This method equip the weaponPos weapon of the weapons array to the actual character,
+     * only if it is a PlayerCharacter. This method will be used by the interface.
+     * @param weaponPos the position of the equipped weapon.
+     */
     public void equipWeaponToActual(Integer weaponPos){
         if (actPlayerCharacter){
             try {
                 actPhase.equipWeaponToActual(weaponPos);
             } catch (InvalidActionException e) {
-                e.printStackTrace();
+                info += e.getMessage()+"\n";
             }
         }
     }
 
-    public void actualAttack(Integer attackedPos){
+    /**
+     * This method sets the new actual target of the character.
+     * This method will be used by the interface.
+     * @param target the position of the target.
+     */
+    public void setActTarget(Integer target){
+        actTarget = target;
+    }
+
+    /**
+     * This method returns the value of actTarget, used in the tests and by the interface.
+     */
+    public Integer getActTarget(){
+        return actTarget;
+    }
+
+    /**
+     * This method represents the attack between the actual character again the target
+     * character in the actTarget position. This method will be used by the interface.
+     */
+    public void actualAttack(){
         try {
-            actPhase.actualAttack( attackedPos);
+            actPhase.actualAttack(actTarget);
         } catch (InvalidActionException e) {
-            e.printStackTrace();
+            info += e.getMessage()+"\n";
         }
+    }
+
+    /**
+     * This method returns the PlayerCharacter in the position pos in the alivePlayerCharacters array.
+     * @param pos the position of the playerCharacter.
+     */
+    public IPlayerCharacter getAlivePlayer(Integer pos){
+        return alivePlayerCharacters.get(pos);
+    }
+
+    /**
+     * This method returns the String of the PlayerCharacter in the pos position.
+     * This method is used by the interface.
+     * @param pos the position of the PlayerCharacter in the playerCharacters array.
+     */
+    public String getStringOfPlayer(int pos) {
+        IPlayerCharacter plyr = getPlayer(pos);
+        return "Name: " + plyr.getName()+"\n"+
+               "HP: " + plyr.getLifePoints()+"\n"+
+               "DF: " + plyr.getDefense()+"\n"+
+               "W.N.: " + plyr.getEquippedWeapon().getName()+"\n"+
+               "W.D.: " + plyr.getEquippedWeapon().getDamage()+"\n"+
+               "W.W.: " + plyr.getEquippedWeapon().getWeight();
+    }
+
+    /**
+     * This method returns the String of the Enemy in the pos position.
+     * This method is used by the interface.
+     * @param pos the position of the Enemy in the enemies array.
+     */
+    public String getStringOfEnemy(int pos) {
+        Enemy character = getEnemy(pos);
+        return  "Name: " + character.getName()+"\n"+
+                "HP: " + character.getLifePoints()+"\n"+
+                "DF: " + character.getDefense()+"\n"+
+                "DMG: " + character.getDamage()+"\n"+
+                "WGT: " + character.getWeight();
+    }
+
+    /**
+     * This method returns the String of the Weapon in the pos position.
+     * This method is used by the interface.
+     * @param pos the position of the Weapon in the weapons array.
+     */
+    public String getStringOfWeapon(int pos) {
+        IWeapon weapon = getWeapon(pos);
+        return  "Name: " + weapon.getName()+"\n"+
+                "DMG: " + weapon.getDamage()+"\n"+
+                "WGT: " + weapon.getWeight();
+    }
+
+    /**
+     * This method returns the String of the actual Phase.
+     * This method is used by the interface.
+     */
+    public String getStringOfPhase() {
+        return getPhase().toString();
+    }
+
+    /**
+     * This method returns the value of info. The field info contains the information about the InvalidActionExceptions
+     * that occur in the execution of the game.
+     */
+    public String getInfo() {
+        return info;
+    }
+
+    /**
+     * This method reset the value of info.
+     * This method is called by the interface.
+     */
+    public void resetInfo() {
+        info = "";
+    }
+
+    /**
+     * This method begin a round of a game.
+     * This method is used by the interface.
+     */
+    public void beginRound() {
+        waitAllTurns();
+        beginTurn();
     }
 }

@@ -1,6 +1,6 @@
-package com.github.cc3002.finalreality.gui.handlers;
+package com.github.cc3002.finalreality.controller.handlers;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
  * ICharacter who has ended its turn and finally print the name of the character.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class EndTurnHandler implements PropertyChangeListener {

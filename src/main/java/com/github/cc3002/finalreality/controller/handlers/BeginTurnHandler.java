@@ -1,6 +1,6 @@
-package com.github.cc3002.finalreality.gui.handlers;
+package com.github.cc3002.finalreality.controller.handlers;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
  * any other character in the queue TURNS, if there are any character in the queue, starts a new turn calling the beginTurn method.
  * The body of the propertyChange method may change.
  *
- * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola
  */
 public class BeginTurnHandler implements PropertyChangeListener {
@@ -26,8 +25,9 @@ public class BeginTurnHandler implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!GAME.getTURNS().isEmpty()){
+        if (!GAME.getTURNS().isEmpty()) {
             GAME.beginTurn();
         }
+
     }
 }

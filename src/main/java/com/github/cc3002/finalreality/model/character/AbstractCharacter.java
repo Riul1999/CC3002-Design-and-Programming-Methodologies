@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveAbstractCharacterHandler;
-import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
-import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AliveAbstractCharacterHandler;
+import com.github.cc3002.finalreality.controller.handlers.EndTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.BeginTurnHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
