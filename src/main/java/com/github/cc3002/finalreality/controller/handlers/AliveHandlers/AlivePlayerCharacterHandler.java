@@ -1,6 +1,6 @@
-package com.github.cc3002.finalreality.gui.handlers.AliveHandlers;
+package com.github.cc3002.finalreality.controller.handlers.AliveHandlers;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 import com.github.cc3002.finalreality.model.character.player.IPlayerCharacter;
 
 import java.beans.PropertyChangeEvent;

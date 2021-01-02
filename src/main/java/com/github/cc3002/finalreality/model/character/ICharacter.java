@@ -1,8 +1,8 @@
 package com.github.cc3002.finalreality.model.character;
 
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveAbstractCharacterHandler;
-import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
-import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AliveAbstractCharacterHandler;
+import com.github.cc3002.finalreality.controller.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.EndTurnHandler;
 
 /**
  * This represents a character from the game.

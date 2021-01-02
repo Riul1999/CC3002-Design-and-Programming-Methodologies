@@ -1,9 +1,9 @@
-package com.github.cc3002.finalreality.gui.gameController;
+package com.github.cc3002.finalreality.controller.gameController;
 
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AliveEnemyHandler;
-import com.github.cc3002.finalreality.gui.handlers.AliveHandlers.AlivePlayerCharacterHandler;
-import com.github.cc3002.finalreality.gui.handlers.EndTurnHandler;
-import com.github.cc3002.finalreality.gui.handlers.BeginTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AliveEnemyHandler;
+import com.github.cc3002.finalreality.controller.handlers.AliveHandlers.AlivePlayerCharacterHandler;
+import com.github.cc3002.finalreality.controller.handlers.EndTurnHandler;
+import com.github.cc3002.finalreality.controller.handlers.BeginTurnHandler;
 import com.github.cc3002.finalreality.gui.phase.IPhase;
 import com.github.cc3002.finalreality.gui.phase.WaitPhase;
 import com.github.cc3002.finalreality.model.character.Enemy;

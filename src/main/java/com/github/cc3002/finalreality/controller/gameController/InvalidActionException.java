@@ -1,4 +1,4 @@
-package com.github.cc3002.finalreality.gui.gameController;
+package com.github.cc3002.finalreality.controller.gameController;
 
 /**
  * A class that informs about problems in GameController or Phase classes.

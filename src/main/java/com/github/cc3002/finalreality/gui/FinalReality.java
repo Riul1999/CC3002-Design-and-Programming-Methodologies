@@ -1,6 +1,6 @@
 package com.github.cc3002.finalreality.gui;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 import com.github.cc3002.finalreality.gui.nodes.MovableNodeBuilder;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Main entry point for the application.
  * <p>
- * <Complete here with the details of the implemented application>
+ * <all the details of the interface are expressed in the readme file>
  *
  * @author Ignacio Slater Muñoz.
  * @author Rodrigo Urrea Loyola

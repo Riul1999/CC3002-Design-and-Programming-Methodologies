@@ -1,6 +1,6 @@
 package com.github.cc3002.finalreality.gui.phase;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
 import com.github.cc3002.finalreality.model.character.ICharacter;
 
 /**

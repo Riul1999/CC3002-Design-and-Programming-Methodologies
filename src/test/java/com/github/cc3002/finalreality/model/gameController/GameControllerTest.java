@@ -1,7 +1,7 @@
 package com.github.cc3002.finalreality.model.gameController;
 
-import com.github.cc3002.finalreality.gui.gameController.GameController;
-import com.github.cc3002.finalreality.gui.gameController.InvalidActionException;
+import com.github.cc3002.finalreality.controller.gameController.GameController;
+import com.github.cc3002.finalreality.controller.gameController.InvalidActionException;
 import com.github.cc3002.finalreality.gui.phase.TurnPhase;
 import com.github.cc3002.finalreality.gui.phase.WaitPhase;
 import com.github.cc3002.finalreality.model.character.Enemy;
@@ -62,7 +62,7 @@ public class GameControllerTest {
     }
 
     /**
-     * Checks the correct beavior of the initializeGame method.
+     * Checks the correct behavior of the initializeGame method.
      */
     @Test
     public void checkInitializeGame() {

@@ -1,4 +1,4 @@
-package com.github.cc3002.finalreality.gui.handlers.AliveHandlers;
+package com.github.cc3002.finalreality.controller.handlers.AliveHandlers;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
